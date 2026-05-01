@@ -118,10 +118,21 @@ sync -f "$OUT/pre-nvidia-smi.txt" 2>/dev/null || sync
 mark 'pre-state captured'
 
 # ------------------------------------------------------ image pull --
-step "pull $IMAGE (cached if present)"
-docker pull "$IMAGE" 2>&1 | tail -3 > "$OUT/docker-pull.txt"
-sync -f "$OUT/docker-pull.txt" 2>/dev/null || sync
-mark 'image pulled'
+# Skip the pull if the image is already in local docker. Network-dependent
+# operations are unsafe immediately after `systemctl isolate multi-user.target`
+# (wifi may not be reconnected; DNS may not resolve), and we already have the
+# image on disk from the initial pull. Use `docker pull` only as a fallback
+# for first-time setup.
+step "ensure $IMAGE is available locally"
+if docker image inspect "$IMAGE" >/dev/null 2>&1; then
+    echo "  image already cached, skipping pull"
+    mark 'image already cached'
+else
+    echo "  image not cached, pulling"
+    docker pull "$IMAGE" 2>&1 | tail -10 > "$OUT/docker-pull.txt"
+    sync -f "$OUT/docker-pull.txt" 2>/dev/null || sync
+    mark 'image pulled'
+fi
 
 # ------------------------------------------------------ start container --
 step "start vLLM container ($CONTAINER_NAME) with model $MODEL (constrained)"
