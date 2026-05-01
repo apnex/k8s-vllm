@@ -146,17 +146,30 @@ docker rm -f "$CONTAINER_NAME" >/dev/null 2>&1 || true
 #   - --enforce-eager (vLLM-side: disable CUDA graphs)
 #   - GPU_MEM=0.2     (use only ~6 GB of GDDR for KV cache)
 #   - MAX_LEN=1024    (smaller context window = less memory)
+# NCCL workarounds for Thunderbolt-attached Blackwell:
+#   NCCL_P2P_DISABLE=1    : don't probe P2P (caused 'GPU lost from the bus'
+#                            with multiple AER uncorrectable errors on the
+#                            00:07.0 bridge during prior run)
+#   NCCL_SHM_DISABLE=1    : don't use shared-memory transport
+#   NCCL_DEBUG=INFO       : log what NCCL is actually doing so the next
+#                            failure (if any) is fully diagnosable
+# Also vLLM-level: --disable-custom-all-reduce skips vLLM's own NCCL
+# all-reduce kernels (no benefit at TP=1 anyway).
 docker run -d \
     --gpus all \
     -p "127.0.0.1:$PORT:8000" \
     -v "$HF_CACHE:/root/.cache/huggingface" \
     --shm-size=2g \
+    -e NCCL_P2P_DISABLE=1 \
+    -e NCCL_SHM_DISABLE=1 \
+    -e NCCL_DEBUG=INFO \
     --name "$CONTAINER_NAME" \
     "$IMAGE" \
     --model "$MODEL" \
     --gpu-memory-utilization "$GPU_MEM" \
     --max-model-len "$MAX_LEN" \
     --enforce-eager \
+    --disable-custom-all-reduce \
     --port 8000 \
     --host 0.0.0.0 \
     > "$OUT/container-id.txt"
