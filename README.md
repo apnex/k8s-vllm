@@ -1,68 +1,94 @@
-# vLLM on AORUS RTX 5090 eGPU (Fedora 42)
+# vLLM on AORUS RTX 5090 eGPU (Fedora 42, Docker)
 
-vLLM-specific setup, smoke tests, and operational notes. Assumes the host platform configuration from `/root/aorus-5090-gpu/` has already been applied — that repo handles the eGPU bring-up (Thunderbolt, NVIDIA driver, persistenced, modprobe blocks). This repo is everything that depends on having a healthy CUDA stack.
+vLLM-specific setup, smoke tests, and operational notes — Docker-based. The host platform configuration (Thunderbolt, NVIDIA driver, persistenced, modprobe blocks) is handled by `/root/aorus-5090-gpu/`. This repo is everything that depends on having a healthy CUDA stack to start vLLM containers against.
+
+## Why Docker
+
+- Official vLLM container images pin every Python / torch / triton / CUDA version against tested combos. Avoids dependency hell.
+- vLLM's CI primarily exercises the container path; fewer "this combo doesn't work" surprises.
+- Clean install/uninstall — no leftover venv files; `docker rmi` and we're done.
+- Natural fit for systemd-managed service-on-boot.
+- vLLM upgrades are a tag change, not a 6-10 GB pip dance.
+
+The kernel-level bugs in NVIDIA's Blackwell-over-Thunderbolt path are NOT fixed by Docker; they live below the container boundary. The host platform setup (`aorus-5090-gpu` repo) is still load-bearing — Docker just simplifies the userspace layer.
 
 ## Prerequisites
 
-Before doing anything in this repo, the host must already pass:
+The host must already pass:
 
 ```bash
 sudo /root/aorus-5090-gpu/status.sh
 ```
 
-with **0 FAIL**. Specifically required:
+with **0 FAIL**. Specifically required: NVIDIA driver loaded, GPU bound, `nvidia_uvm` pre-loaded, `nvidia-persistenced.service` active, `nvidia-smi` repeatable.
 
-- NVIDIA driver loaded, GPU bound (`status.sh` section 6).
-- `nvidia_uvm` pre-loaded (`status.sh` section 2).
-- `nvidia-persistenced.service` active (`status.sh` section 8).
-- `nvidia-smi` repeatable.
-- PyTorch CUDA roundtrip works (validated separately at `/root/aorus-5090-gpu/archive/cuda-validation-2026-05-01/`).
+If platform status is not green, fix that first via `aorus-5090-gpu` rather than papering over it here.
 
-If any of these are not green, fix the platform first via `aorus-5090-gpu` rather than working around it here.
+Also required (and `setup.sh` installs / configures these):
+
+- `nvidia-container-toolkit` (from NVIDIA's container repo)
+- Docker runtime configured for the `nvidia` runtime
+- Docker daemon restarted to pick up the runtime change
 
 ## Goal
 
-Serve LLM inference using vLLM's OpenAI-compatible API on the RTX 5090. Concretely:
+Serve LLM inference using vLLM's OpenAI-compatible API, container-native, on the RTX 5090. Concretely:
 
-1. vLLM installs cleanly into a venv.
-2. vLLM detects the RTX 5090.
-3. A small model loads without freezing the host.
-4. A single inference request returns sensible tokens.
-5. The API server starts and serves multiple concurrent requests.
-6. Each step is validated under the same TTY-with-fsync methodology used in `aorus-5090-gpu/tools/`.
+1. nvidia-container-toolkit installed and working (a CUDA test container can see the GPU).
+2. vLLM container image pulled.
+3. vLLM container starts and detects the GPU.
+4. A small model loads without freezing the host.
+5. A single inference request returns sensible tokens.
+6. The OpenAI API server starts and serves multiple concurrent requests.
+7. systemd unit starts the API on boot, stops cleanly on shutdown.
 
 ## Layout
 
 ```
 /root/vllm/
-├── README.md                 # this file
-├── setup.sh                  # idempotent installer (creates venv, pip install vllm)
-├── status.sh                 # comprehensive health check (parallels aorus-5090-gpu/status.sh)
-├── remove.sh                 # tear down (nuke venv, optional: remove downloaded models)
+├── README.md                         # this file
+├── setup.sh                          # idempotent installer (toolkit + runtime config + image pull)
+├── status.sh                         # comprehensive health check
+├── remove.sh                         # tear down (uninstall toolkit, stop containers, optional: remove images)
 ├── docs/
-│   ├── architecture.md       # how vLLM is wired into this stack, what's load-bearing
-│   ├── recovery.md           # what to do when vLLM hangs / OOMs / freezes the host
-│   └── install-decisions.md  # why Python version, why this vLLM version, why this torch version
+│   ├── architecture.md
+│   ├── recovery.md
+│   └── install-decisions.md
+├── etc/
+│   └── systemd/system/
+│       └── aorus-vllm.service        # systemd unit for the API server (created by phase 4)
 ├── tools/
-│   ├── README.md             # usage guide for diagnostic tools
-│   ├── vllm-import-test.py   # phase 1: import vllm, no CUDA
-│   ├── vllm-cuda-detect.py   # phase 2: vllm sees the GPU, no model load
-│   ├── vllm-tiny-model-test.py # phase 3: load a small model, single inference
-│   └── tty-vllm-test.sh      # TTY-with-fsync runner adapted from aorus-5090-gpu pattern
-└── archive/                  # validation evidence (per-stage results)
+│   ├── README.md
+│   ├── docker-gpu-smoke.sh           # phase 1 verification: test container sees GPU
+│   ├── vllm-cuda-detect.sh           # phase 2: vllm container starts, sees device
+│   └── vllm-tiny-model-test.sh       # phase 3: load a tiny model, single inference
+└── archive/                          # validation evidence (per-stage results)
 ```
 
-A separate venv at `/root/vllm-venv/` is intentional — keeps vLLM's ~6-10 GB dependency tree isolated from the existing `/root/torch-test/` venv (which is pinned to torch 2.11). vLLM brings its own torch.
+Model weights / HuggingFace cache: kept on the host at `/root/.cache/huggingface/` (default location, mounted into the container). NOT in the repo (see `.gitignore`).
 
 ## Status
 
-- [ ] Repo scaffolding
-- [ ] setup.sh: venv creation + vllm install
-- [ ] status.sh: health check parallel to platform repo
-- [ ] Phase 1: vllm import test
-- [ ] Phase 2: vllm CUDA detect test
-- [ ] Phase 3: tiny model load + single inference
-- [ ] Phase 4: API server + concurrent request validation
-- [ ] Day-to-day operational documentation
+- [ ] nvidia-container-toolkit installed and runtime configured
+- [ ] GPU passthrough test container runs `nvidia-smi`
+- [ ] vLLM container image pulled
+- [ ] vLLM container starts cleanly with `--gpus all`
+- [ ] Tiny model loads + one inference returns sensible output
+- [ ] systemd unit + service-on-boot
+- [ ] Validation evidence archived
 
-This document gets updated as each phase passes.
+## Files installed on host
+
+After running `setup.sh`:
+
+| Path | Purpose |
+|---|---|
+| `/etc/yum.repos.d/nvidia-container-toolkit.repo` | NVIDIA's container toolkit dnf repo |
+| `nvidia-container-toolkit` package and deps | container GPU access tooling |
+| `/etc/docker/daemon.json` | docker runtime configured for `nvidia` (modified, not replaced — preserves existing `insecure-registries`) |
+| `/etc/systemd/system/aorus-vllm.service` | (after phase 4) systemd unit running the API server |
+
+Things explicitly NOT created by `setup.sh`:
+
+- The vLLM container itself (created by `tools/...` test scripts during validation, or by the systemd unit at boot once configured).
+- Model weights — those download on first use.

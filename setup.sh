@@ -1,22 +1,20 @@
 #!/usr/bin/env bash
-# Idempotent vLLM venv installer.
+# Idempotent installer for the Docker-based vLLM stack.
 #
-# Creates /root/vllm-venv/ with the chosen Python interpreter and installs
-# vLLM (and its dependencies, including its preferred torch). Safe to re-run.
+# 1. Verifies the host platform (aorus-5090-gpu) is healthy.
+# 2. Adds NVIDIA's container toolkit dnf repo.
+# 3. Installs nvidia-container-toolkit.
+# 4. Configures Docker runtime for nvidia (preserves existing daemon.json keys).
+# 5. Restarts dockerd to pick up the runtime config.
+# 6. Validates GPU passthrough with a small CUDA test container.
 #
-# Configurable via env vars:
-#   PYTHON     - interpreter to use (default: python3.13)
-#   VENV_PATH  - where to create the venv (default: /root/vllm-venv)
-#   VLLM_VERSION - vllm version pin (default: 0.20.0; empty = latest)
+# Does NOT pull the vLLM image or start any vLLM container - that's the next
+# phase, gated by tools/docker-gpu-smoke.sh passing first.
 
 set -euo pipefail
 
-PYTHON="${PYTHON:-python3.13}"
-VENV_PATH="${VENV_PATH:-/root/vllm-venv}"
-VLLM_VERSION="${VLLM_VERSION:-0.20.0}"
-
 if [[ "$EUID" -ne 0 ]]; then
-    echo "setup.sh must be run as root (writes to /root/vllm-venv/)" >&2
+    echo "setup.sh must be run as root" >&2
     exit 1
 fi
 
@@ -25,81 +23,111 @@ yellow() { printf '\033[33m%s\033[0m\n' "$*"; }
 red() { printf '\033[31m%s\033[0m\n' "$*" >&2; }
 step() { printf '\n=== %s ===\n' "$*"; }
 
-# ------------------------------------------------------------------- python --
-step "verify Python interpreter"
-
-if ! command -v "$PYTHON" >/dev/null; then
-    red "$PYTHON not found in PATH."
-    if [[ "$PYTHON" =~ ^python3\.[0-9]+$ ]]; then
-        ver="${PYTHON#python}"
-        red "Install with: sudo dnf install $PYTHON"
-    fi
-    exit 2
-fi
-
-py_version=$("$PYTHON" -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}")')
-echo "  using $PYTHON ($py_version)"
-
 # ---------------------------------------------------------- platform check --
 step "verify platform (aorus-5090-gpu) is healthy"
 
 if [[ -x /root/aorus-5090-gpu/status.sh ]]; then
     if /root/aorus-5090-gpu/status.sh > /tmp/aorus-status-pre-vllm.$$ 2>&1; then
-        echo "  platform status: HEALTHY"
+        green "  platform status: HEALTHY"
+        rm -f /tmp/aorus-status-pre-vllm.$$
     else
         rc=$?
-        red "Platform status check returned $rc - the host may not be ready for vLLM."
-        red "See /tmp/aorus-status-pre-vllm.$$ for details."
-        red "Continue anyway by setting AORUS_VLLM_SKIP_PLATFORM_CHECK=1."
+        red "Platform status returned $rc - host is not ready for vLLM."
+        red "See /tmp/aorus-status-pre-vllm.$$ for the full report."
+        red "To proceed anyway, set AORUS_VLLM_SKIP_PLATFORM_CHECK=1."
         if [[ "${AORUS_VLLM_SKIP_PLATFORM_CHECK:-0}" != "1" ]]; then
             exit 3
         fi
-        yellow "  AORUS_VLLM_SKIP_PLATFORM_CHECK=1 - proceeding despite platform warnings"
+        yellow "  AORUS_VLLM_SKIP_PLATFORM_CHECK=1 - proceeding"
     fi
-    rm -f /tmp/aorus-status-pre-vllm.$$
 else
     yellow "  /root/aorus-5090-gpu/status.sh not found; skipping platform check"
 fi
 
-# ---------------------------------------------------------- venv creation --
-step "create venv"
+# -------------------------------------------------- docker daemon running --
+step "verify docker daemon"
 
-if [[ -x "$VENV_PATH/bin/python3" ]]; then
-    echo "  $VENV_PATH already exists, reusing"
+if ! systemctl is-active docker.service >/dev/null 2>&1; then
+    red "docker.service is not active. Start it with: systemctl start docker"
+    exit 4
+fi
+green "  docker.service is active"
+
+docker_ver=$(docker --version 2>&1 || true)
+echo "  $docker_ver"
+
+# -------------------------------------------------- container toolkit repo --
+step "ensure NVIDIA container toolkit repo is configured"
+
+repo_file=/etc/yum.repos.d/nvidia-container-toolkit.repo
+if [[ -f "$repo_file" ]]; then
+    echo "  $repo_file already exists"
 else
-    "$PYTHON" -m venv "$VENV_PATH"
-    echo "  created $VENV_PATH"
+    curl -fsSL https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo \
+        -o "$repo_file"
+    echo "  installed $repo_file"
 fi
 
-PIP="$VENV_PATH/bin/pip"
+# -------------------------------------------------- install toolkit pkg --
+step "ensure nvidia-container-toolkit is installed"
 
-step "upgrade pip"
-"$PIP" install --upgrade pip 2>&1 | tail -3
-
-# ---------------------------------------------------------- install vllm --
-step "install vllm"
-
-# Check if vllm is already installed at the desired version
-if "$PIP" show vllm 2>/dev/null | grep -q "^Version: $VLLM_VERSION$"; then
-    echo "  vllm $VLLM_VERSION already installed"
+if rpm -q nvidia-container-toolkit >/dev/null 2>&1; then
+    installed_ver=$(rpm -q --qf '%{VERSION}-%{RELEASE}' nvidia-container-toolkit)
+    echo "  nvidia-container-toolkit $installed_ver already installed"
 else
-    if [[ -n "$VLLM_VERSION" ]]; then
-        "$PIP" install "vllm==$VLLM_VERSION"
+    dnf install -y nvidia-container-toolkit
+    rpm -q nvidia-container-toolkit
+fi
+
+# -------------------------------------------------- configure docker runtime
+step "configure Docker for nvidia runtime"
+
+before_hash=$(sha256sum /etc/docker/daemon.json 2>/dev/null | awk '{print $1}' || echo "missing")
+nvidia-ctk runtime configure --runtime=docker
+after_hash=$(sha256sum /etc/docker/daemon.json 2>/dev/null | awk '{print $1}' || echo "missing")
+
+if [[ "$before_hash" == "$after_hash" ]]; then
+    echo "  /etc/docker/daemon.json already configured (no change)"
+else
+    echo "  /etc/docker/daemon.json updated"
+fi
+
+# Sanity-check that the nvidia runtime is in the docker config
+if ! grep -q '"nvidia"' /etc/docker/daemon.json 2>/dev/null; then
+    red "nvidia runtime not visible in /etc/docker/daemon.json after configure - manual review needed"
+    cat /etc/docker/daemon.json 2>&1 || true
+    exit 5
+fi
+echo "  nvidia runtime present in daemon.json"
+
+# -------------------------------------------------- restart dockerd --
+step "restart dockerd to pick up runtime config"
+
+# Detect whether a restart is needed by checking docker info for the nvidia runtime
+if docker info 2>&1 | grep -q 'Runtimes:.*nvidia'; then
+    green "  dockerd already exposes nvidia runtime, no restart needed"
+else
+    yellow "  restarting docker.service"
+    systemctl restart docker.service
+    sleep 2
+    if docker info 2>&1 | grep -q 'Runtimes:.*nvidia'; then
+        green "  dockerd now exposes nvidia runtime"
     else
-        "$PIP" install vllm
+        red "  nvidia runtime still not visible in docker info; manual investigation needed"
+        exit 6
     fi
 fi
 
-# Optionally install hf_transfer for faster model downloads, and
-# huggingface_hub which vllm uses anyway but pin it here for visibility.
-"$PIP" install -q hf_transfer huggingface_hub 2>&1 | tail -3 || true
+# ---------------------------------------------------- final summary --
+step "next steps"
 
-# ---------------------------------------------------------- final summary --
-step "installed versions"
+cat <<'EOF'
+setup.sh complete.
 
-"$PIP" list 2>/dev/null | grep -iE '^(vllm|torch|transformers|tokenizers|huggingface-hub|nvidia-|triton|safetensors)\s' | head -20
+To validate GPU passthrough, run:
+    sudo /root/vllm/tools/docker-gpu-smoke.sh
 
-echo
-green "setup.sh complete."
-green "venv: $VENV_PATH"
-green "next: run tools/vllm-import-test.py to validate phase 1"
+That runs a small NVIDIA CUDA test image with --gpus all and confirms
+nvidia-smi sees the RTX 5090 from inside the container. If that passes,
+the next step is to pull the vLLM image and start the model load test.
+EOF
