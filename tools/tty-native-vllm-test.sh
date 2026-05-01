@@ -59,18 +59,36 @@ cleanup() {
     if [[ -n "${LOG_TAILER_PID:-}" ]] && kill -0 "$LOG_TAILER_PID" 2>/dev/null; then
         kill "$LOG_TAILER_PID" 2>/dev/null || true
     fi
+    # Kill the vllm process AND its entire descendant tree.
+    #
+    # Bug history (fixed here): an earlier version of this function only sent
+    # TERM to $VLLM_PID. vLLM forks an EngineCore child via Python
+    # multiprocessing; when the parent died, EngineCore got reparented to init
+    # and kept running at 99.9% CPU until its next user-driven kill. This
+    # pegged the NUC fan and ran CPU at 92C until manually noticed.
+    #
+    # Fix: the vllm process is launched under `setsid` (see start section),
+    # which makes its PID equal to its PGID. `kill -- -PGID` signals the
+    # entire process group, catching every descendant.
     if [[ -n "${VLLM_PID:-}" ]] && kill -0 "$VLLM_PID" 2>/dev/null; then
-        yellow "  stopping vllm pid=$VLLM_PID"
-        kill -TERM "$VLLM_PID" 2>/dev/null || true
-        # Give it 30s to exit cleanly, then SIGKILL
+        yellow "  stopping vllm process group -$VLLM_PID"
+        kill -TERM -- "-$VLLM_PID" 2>/dev/null || true
+        # Give the group 30s to exit cleanly, then SIGKILL.
         for _ in $(seq 1 30); do
             kill -0 "$VLLM_PID" 2>/dev/null || break
             sleep 1
         done
         if kill -0 "$VLLM_PID" 2>/dev/null; then
-            kill -KILL "$VLLM_PID" 2>/dev/null || true
+            yellow "  process group did not exit on TERM, sending KILL"
+            kill -KILL -- "-$VLLM_PID" 2>/dev/null || true
         fi
     fi
+    # Belt-and-suspenders: hunt and kill any leftover vLLM EngineCore /
+    # multiprocessing-resource-tracker / log-tailer processes that somehow
+    # escaped the process-group reach.
+    pkill -KILL -f 'VLLM::EngineCore' 2>/dev/null || true
+    pkill -KILL -f 'multiprocessing.resource_tracker' 2>/dev/null || true
+
     # Restore graphical.target if we were launched into multi-user
     if ! systemctl is-active graphical.target >/dev/null 2>&1; then
         mark 'EXIT: restoring graphical.target'
@@ -166,7 +184,7 @@ NCCL_DEBUG=INFO \
 HF_HUB_OFFLINE=1 \
 TRANSFORMERS_OFFLINE=1 \
 CUDA_MODULE_LOADING=EAGER \
-"$VENV_PATH/bin/python3" /root/vllm/tools/vllm-gloo-preinit.py serve "$MODEL" \
+setsid "$VENV_PATH/bin/python3" /root/vllm/tools/vllm-gloo-preinit.py serve "$MODEL" \
     --gpu-memory-utilization "$GPU_MEM" \
     --max-model-len "$MAX_LEN" \
     --enforce-eager \
