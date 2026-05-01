@@ -138,14 +138,19 @@ step "start vllm serve"
 # HF_HUB_OFFLINE=1 + TRANSFORMERS_OFFLINE=1: model is pre-cached at
 # ~/.cache/huggingface/. multi-user.target's DNS is not reliable in the
 # first ~30 s after `systemctl isolate`, so any HuggingFace Hub query
-# fails with name-resolution errors and vLLM exits before reaching GPU
-# init. Force pure-local resolution.
+# fails with name-resolution errors. Force pure-local resolution.
+#
+# vllm-gloo-preinit.py: pre-init torch.distributed with gloo backend
+# before vllm gets a chance to call init_process_group(backend='nccl').
+# NCCL init at world_size=1 is what was freezing the host. gloo is a
+# no-op at world_size=1 (no actual collectives) and vllm respects an
+# already-initialized torch.distributed.
 NCCL_P2P_DISABLE=1 \
 NCCL_SHM_DISABLE=1 \
 NCCL_DEBUG=INFO \
 HF_HUB_OFFLINE=1 \
 TRANSFORMERS_OFFLINE=1 \
-"$VENV_PATH/bin/vllm" serve "$MODEL" \
+"$VENV_PATH/bin/python3" /root/vllm/tools/vllm-gloo-preinit.py serve "$MODEL" \
     --gpu-memory-utilization "$GPU_MEM" \
     --max-model-len "$MAX_LEN" \
     --enforce-eager \
