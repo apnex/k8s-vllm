@@ -145,16 +145,33 @@ step "start vllm serve"
 # NCCL init at world_size=1 is what was freezing the host. gloo is a
 # no-op at world_size=1 (no actual collectives) and vllm respects an
 # already-initialized torch.distributed.
+#
+# After gloo-preinit got us past NCCL but the host then froze a few seconds
+# after model weight load (0.25 GiB allocated, then bus loss), the new
+# suspect is JIT compilation of attention/Triton kernels for sm_120 during
+# vLLM's profile run. Two complementary additions:
+#
+#   CUDA_MODULE_LOADING=EAGER : eager-load CUDA modules at context creation
+#                                rather than on first kernel use. (In the
+#                                docker test, this prevented bus loss but
+#                                caused indefinite hang at NCCL; with NCCL
+#                                bypassed, it should let us through profile.)
+#   --attention-backend FLASHINFER
+#                              : use FlashInfer (precompiled CUDA kernels for
+#                                Blackwell) instead of FlashAttention 2 which
+#                                vLLM seems to JIT for our sm_120 device.
 NCCL_P2P_DISABLE=1 \
 NCCL_SHM_DISABLE=1 \
 NCCL_DEBUG=INFO \
 HF_HUB_OFFLINE=1 \
 TRANSFORMERS_OFFLINE=1 \
+CUDA_MODULE_LOADING=EAGER \
 "$VENV_PATH/bin/python3" /root/vllm/tools/vllm-gloo-preinit.py serve "$MODEL" \
     --gpu-memory-utilization "$GPU_MEM" \
     --max-model-len "$MAX_LEN" \
     --enforce-eager \
     --disable-custom-all-reduce \
+    --attention-backend FLASHINFER \
     --port "$PORT" \
     --host 0.0.0.0 \
     > "$OUT/vllm-stdout.txt" 2> "$OUT/vllm-stderr.txt" &
