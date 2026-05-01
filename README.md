@@ -69,8 +69,8 @@ Model weights / HuggingFace cache: kept on the host at `/root/.cache/huggingface
 
 ## Status
 
-- [ ] nvidia-container-toolkit installed and runtime configured
-- [ ] GPU passthrough test container runs `nvidia-smi`
+- [x] nvidia-container-toolkit installed and runtime configured (2026-05-01)
+- [x] GPU passthrough test container runs `nvidia-smi` (2026-05-01: nvidia/cuda:13.0.0-base-ubi9 saw RTX 5090 cleanly, host remained 45/45 OK after)
 - [ ] vLLM container image pulled
 - [ ] vLLM container starts cleanly with `--gpus all`
 - [ ] Tiny model loads + one inference returns sensible output

@@ -1,0 +1,34 @@
+
+=== preflight - confirm host preconditions ===
+[32m  preconditions ok[0m
+
+=== pull nvidia/cuda:13.0.0-base-ubi9 (cached if present) ===
+13.0.0-base-ubi9: Pulling from nvidia/cuda
+Digest: sha256:993f3678ce75c02b9ee17bd452acfdd856af6451cb33b0dfff8410bf69279c13
+Status: Image is up to date for nvidia/cuda:13.0.0-base-ubi9
+docker.io/nvidia/cuda:13.0.0-base-ubi9
+
+=== run container with --gpus all and execute nvidia-smi ===
+Fri May  1 10:57:44 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.142                Driver Version: 580.142        CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 5090        On  |   00000000:04:00.0 Off |                  N/A |
+| 30%   31C    P8             20W /  575W |       1MiB /  32607MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+[32m
+GPU passthrough verified. The container saw the RTX 5090.
+Next: pull vllm/vllm-openai and run tools/vllm-cuda-detect.sh[0m
