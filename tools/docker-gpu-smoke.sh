@@ -27,11 +27,13 @@ IMG="${IMG:-nvidia/cuda:13.0.0-base-ubi9}"
 
 step "preflight - confirm host preconditions"
 
-if ! lsmod | grep -q '^nvidia '; then
+# Read /proc/modules directly: 'lsmod | grep -q' with set -o pipefail fails
+# with SIGPIPE (rc=141) when grep exits early before lsmod finishes writing.
+if ! grep -q '^nvidia ' /proc/modules; then
     red "nvidia kernel module is not loaded on the host"
     exit 2
 fi
-if ! lsmod | grep -q '^nvidia_uvm '; then
+if ! grep -q '^nvidia_uvm ' /proc/modules; then
     red "nvidia_uvm is not loaded - run aorus-5090-compute-load-nvidia.service first"
     exit 3
 fi
