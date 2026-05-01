@@ -134,9 +134,17 @@ mark 'settled'
 step "start vllm serve"
 # All flags consistent with the docker constrained-retry. NCCL workarounds
 # kept just in case (cheap; no harm if NCCL doesn't get there).
+#
+# HF_HUB_OFFLINE=1 + TRANSFORMERS_OFFLINE=1: model is pre-cached at
+# ~/.cache/huggingface/. multi-user.target's DNS is not reliable in the
+# first ~30 s after `systemctl isolate`, so any HuggingFace Hub query
+# fails with name-resolution errors and vLLM exits before reaching GPU
+# init. Force pure-local resolution.
 NCCL_P2P_DISABLE=1 \
 NCCL_SHM_DISABLE=1 \
 NCCL_DEBUG=INFO \
+HF_HUB_OFFLINE=1 \
+TRANSFORMERS_OFFLINE=1 \
 "$VENV_PATH/bin/vllm" serve "$MODEL" \
     --gpu-memory-utilization "$GPU_MEM" \
     --max-model-len "$MAX_LEN" \
