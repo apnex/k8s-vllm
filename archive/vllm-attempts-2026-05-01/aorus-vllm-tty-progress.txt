@@ -1,0 +1,5 @@
+2026-05-01 21:52:43 AEST wrapper started
+2026-05-01 21:52:43 AEST waiting 10s for multi-user settle
+2026-05-01 21:52:53 AEST multi-user settle done
+2026-05-01 21:52:53 AEST invoking inner test
+2026-05-01 22:03:26 AEST EXIT: restoring graphical.target

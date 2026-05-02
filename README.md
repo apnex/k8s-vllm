@@ -71,11 +71,21 @@ Model weights / HuggingFace cache: kept on the host at `/root/.cache/huggingface
 
 - [x] nvidia-container-toolkit installed and runtime configured (2026-05-01)
 - [x] GPU passthrough test container runs `nvidia-smi` (2026-05-01: nvidia/cuda:13.0.0-base-ubi9 saw RTX 5090 cleanly, host remained 45/45 OK after)
-- [ ] vLLM container image pulled
-- [ ] vLLM container starts cleanly with `--gpus all`
+- [x] vLLM container image pulled (vllm/vllm-openai:v0.20.0, 22.9 GB)
+- [ ] vLLM container starts cleanly with `--gpus all`  ← **BLOCKED by upstream bug**
 - [ ] Tiny model loads + one inference returns sensible output
 - [ ] systemd unit + service-on-boot
-- [ ] Validation evidence archived
+- [x] Validation evidence archived (see `archive/vllm-attempts-2026-05-01/`)
+
+### Outcome: vLLM 0.20.0 not viable on this stack
+
+8+ host freezes across docker and native installs (2026-05-01 evening session). Failure trigger: `torch.distributed.init_process_group(backend='nccl', ...)` and a secondary post-model-load profile-run trigger; both physically take the eGPU off the PCIe bus and hard-lock the host.
+
+The `vllm-gloo-preinit.py` workaround (this repo, `tools/`) genuinely bypasses the NCCL freeze - vLLM successfully loads model weights into VRAM with it - but a second freeze hits at the post-load profile run.
+
+Verdict: vLLM 0.20.0 is blocked on either an NVIDIA driver fix or a vLLM single-process code path. The repo state and workaround are preserved for revisiting later.
+
+**Next session: see `docs/next-session-ollama.md` for the ollama pivot plan.**
 
 ## Files installed on host
 

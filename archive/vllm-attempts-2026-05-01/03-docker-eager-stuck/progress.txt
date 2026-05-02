@@ -1,0 +1,8 @@
+2026-05-01 21:52:53 AEST started
+2026-05-01 21:52:53 AEST preconditions ok
+2026-05-01 21:52:53 AEST pre-state captured
+2026-05-01 21:52:53 AEST image already cached
+2026-05-01 21:52:53 AEST container started: e3117d75d03d1c882734322ec659a084e24de81ee33142bcdaac166686b5b792
+2026-05-01 21:52:53 AEST log tailer started: pid=8139
+2026-05-01 21:52:53 AEST /health -> 000000
+2026-05-01 22:02:55 AEST TIMEOUT waiting for /health
