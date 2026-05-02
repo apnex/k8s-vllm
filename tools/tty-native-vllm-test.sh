@@ -164,32 +164,29 @@ step "start vllm serve"
 # no-op at world_size=1 (no actual collectives) and vllm respects an
 # already-initialized torch.distributed.
 #
-# After gloo-preinit got us past NCCL but the host then froze a few seconds
-# after model weight load (0.25 GiB allocated, then bus loss), the new
-# suspect is JIT compilation of attention/Triton kernels for sm_120 during
-# vLLM's profile run. Two complementary additions:
+# Iteration history:
+#   - gloo-preinit only: got past NCCL freeze, model weight load succeeded,
+#     host then froze ~5s later (presumed: profile run / KV cache alloc).
+#   - + CUDA_MODULE_LOADING=EAGER + --attention-backend FLASHINFER:
+#     no host freeze, but EngineCore hung in CPU spin during init.
 #
-#   CUDA_MODULE_LOADING=EAGER : eager-load CUDA modules at context creation
-#                                rather than on first kernel use. (In the
-#                                docker test, this prevented bus loss but
-#                                caused indefinite hang at NCCL; with NCCL
-#                                bypassed, it should let us through profile.)
-#   --attention-backend FLASHINFER
-#                              : use FlashInfer (precompiled CUDA kernels for
-#                                Blackwell) instead of FlashAttention 2 which
-#                                vLLM seems to JIT for our sm_120 device.
+# This iteration: drop EAGER and FLASHINFER (both proved to introduce
+# their own hang), keep gloo-preinit, ADD --no-enable-prefix-caching.
+# Prefix caching adds extra block-allocation kernels at profile run; with
+# it disabled, the profile path is simpler. If this still freezes at the
+# same point as the gloo-only run, vLLM is not viable on this stack
+# tonight - pivot to llama.cpp / ollama.
 NCCL_P2P_DISABLE=1 \
 NCCL_SHM_DISABLE=1 \
 NCCL_DEBUG=INFO \
 HF_HUB_OFFLINE=1 \
 TRANSFORMERS_OFFLINE=1 \
-CUDA_MODULE_LOADING=EAGER \
 setsid "$VENV_PATH/bin/python3" /root/vllm/tools/vllm-gloo-preinit.py serve "$MODEL" \
     --gpu-memory-utilization "$GPU_MEM" \
     --max-model-len "$MAX_LEN" \
     --enforce-eager \
     --disable-custom-all-reduce \
-    --attention-backend FLASHINFER \
+    --no-enable-prefix-caching \
     --port "$PORT" \
     --host 0.0.0.0 \
     > "$OUT/vllm-stdout.txt" 2> "$OUT/vllm-stderr.txt" &
