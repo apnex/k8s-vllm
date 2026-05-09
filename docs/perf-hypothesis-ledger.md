@@ -73,10 +73,26 @@ is interpretable:
 
 **Quality gate (must run before declaring any H complete):**
 
-1. Aider Polyglot subset (30 problems across Python / JS / Rust / Go / C++ / Java).
-   See [`tools/aider-polyglot-bench.sh`](../tools/aider-polyglot-bench.sh).
-2. OpenCode hand-crafted suite — 5 representative tasks, scored 1–5.
+1. Aider Polyglot subset.
+   See [`tools/polyglot-bench.sh`](../tools/polyglot-bench.sh) —
+   custom minimal runner (no aider package dependency,
+   directly drives vLLM via curl, runs language-native tests).
+2. OpenCode hand-crafted suite (TODO) — 5 representative tasks, scored 1–5.
 3. Tool-call retry count on the suite (target: 0 per task).
+
+**Reproducibility caveats found 2026-05-09 during H1 baseline attempt:**
+
+- vLLM with continuous batching is **non-deterministic at temp=0**
+  unless `seed` is pinned.
+  Greedy decoding's tie-breaking has small numerical jitter from batched
+  forward passes.
+  **The harness MUST send `seed: 42` (or any fixed int) on every request**
+  for runs to be comparable.
+- Some problems are token-budget-sensitive
+  (Gemma 4 26B-A4B is verbose on `bowling`, `food-chain`, `beer-song`);
+  `max_tokens=8192` is still tight.
+  Either bump to 16384 or add "be concise" to the prompt.
+- Both fixes pending (see "Open methodology issues" below).
 
 **Performance benchmark (run before + after each change):**
 
@@ -114,14 +130,24 @@ The companion `aorus-5090-egpu/status.sh` snapshot goes alongside.
 
 | Field | Value |
 |---|---|
-| Status | **OPEN** |
+| Status | **ACTIVE** (baseline attempted 2026-05-09; harness fixes pending) |
 | Stated | 2026-05-09 |
 | Motivation | Qwen3-Coder is code-pretrained + RLHF'd specifically for SWE; Gemma 4 is general-purpose. Both are MoE with ~3-4B active params, so decode speed should land in the same bucket. Quality on Aider Polyglot for Qwen3-Coder-30B-A3B reportedly leads dense 70B models. |
 | Quality gate | Aider Polyglot subset pass-rate must beat current Gemma 4 baseline by ≥ +5 percentage points to be declared a quality win. |
-| Test plan | Pull `cyankiwi/Qwen3-Coder-30B-A3B-Instruct-AWQ-4bit`. Swap `VLLM_MODEL`, restart, run perf-snapshot.sh + Aider subset. Compare against frozen Gemma 4 baseline. n=3 on Aider subset to control for sampling variance. |
+| Test plan | Pull `cyankiwi/Qwen3-Coder-30B-A3B-Instruct-AWQ-4bit`. Swap `VLLM_MODEL`, restart, run polyglot-bench.sh + perf-snapshot. Compare against frozen Gemma 4 baseline. n=3 on Aider subset to control for sampling variance. |
 | Measurement | Aider Polyglot pass-rate (%); decode tok/s ×3; concurrent-4 decode tok/s; OpenCode tool-retry count on hand-crafted suite. |
 | If proven | Switch default `VLLM_MODEL` to Qwen3-Coder; lock as Phase 1 baseline. |
 | If falsified | Stay on Gemma 4; explore other code-tuned models (Magistral-Small, Mistral-Small-3.2-24B). |
+| **Preliminary data** | Gemma 4 26B-A4B-it AWQ-4bit on Python n=10 (2026-05-09): 5/10 PASS at max_tokens=4096; partial 2/10 at max_tokens=8192 (halted, run differed from first due to seed-determinism issue). **Both runs are pre-fix and not authoritative.** Re-run with seed=42 + max_tokens=16384 needed before any cross-model comparison. |
+| Archive | `archive/polyglot-20260509T113230Z-gemma-4-26b-a4b-it-python/` (run 1, pre-fix), `archive/polyglot-20260509T11*-...-v2/` (run 2, partial, halted) |
+
+### Open methodology issues (must fix before resuming H1)
+
+| Issue | Detail | Fix |
+|---|---|---|
+| Non-deterministic decoding | Two `temp=0` runs of the same prompt produced different outputs on `beer-song` and `dot-dsl` (pass→fail flip). vLLM continuous batching has small numerical jitter unless seeded. | Add `seed: 42` to chat-completion request body in `polyglot-bench.sh`. |
+| Gemma 4 verbosity | 3/10 problems hit `max_tokens=4096`, 1/10 still hit `max_tokens=8192` (`bowling`). Likely real model behaviour, not just artifact. | Bump to `max_tokens=16384`; consider adding "Output the file as concisely as possible. No prose." to the prompt. |
+| Test-runner false negatives | Pytest `unittest discover` may report OK on partial test failures. Need to verify `OK` regex is correct. | Spot-check passes/fails by reading `_test_output.log` in each sandbox. |
 
 ### H2 — n-gram speculative decoding gives 1.3–1.8× decode with zero quality loss
 
