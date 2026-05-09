@@ -56,33 +56,44 @@ services:
     #   --enable-auto-tool-choice        accept OpenAI-format `tool_choice: auto`
     #                                    payloads (OpenCode + most agentic
     #                                    clients send these)
-    #   --tool-call-parser=llama3_json   parser that matches Llama 3.1's tool-call
-    #                                    output format (don't change for non-Llama
-    #                                    models; valid options: hermes, mistral,
-    #                                    llama3_json, llama4_json, granite, ...)
+    #   --tool-call-parser=gemma4        parser matching Gemma 4's tool-call
+    #                                    output format. Switch per model family:
+    #                                      Llama 3.x  → llama3_json
+    #                                      Llama 4.x  → llama4_pythonic
+    #                                      Mistral    → mistral
+    #                                      Hermes     → hermes
+    #                                      Gemma 4    → gemma4
+    #                                      Qwen 3     → qwen3xml or qwen3coder
     #
     # No --enforce-eager: torch.compile + CUDAGraphs are on (~10-20% faster
     # decode, ~2-5 min slower cold start while CUDAGraphs compile). Flip on
     # by re-adding `- "--enforce-eager"` if startup time matters more than
     # decode speed (debugging, cold-boot CI, etc.).
     command:
-      - "--model=${VLLM_MODEL:-unsloth/Meta-Llama-3.1-8B-Instruct}"
+      - "--model=${VLLM_MODEL:-cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit}"
+      - "--served-model-name=${VLLM_SERVED_NAME:-gemma-4-26b-a4b-it}"
       - "--max-model-len=32768"
+      # Per-batch token budget. Default 2048 is too small for multimodal models
+      # (Gemma 4 needs 2496 per image item). 8192 is a safe ceiling that also
+      # gives prefill plenty of room for long prompts.
+      - "--max-num-batched-tokens=8192"
       - "--gpu-memory-utilization=0.90"
       - "--dtype=auto"
       - "--enable-auto-tool-choice"
-      - "--tool-call-parser=llama3_json"
+      - "--tool-call-parser=gemma4"
 
     # Healthcheck via the OpenAI-compatible /health endpoint.
-    # start_period generous: with torch.compile + CUDAGraphs (no --enforce-eager),
-    # cold start can run 5+ min while graphs are captured for various batch sizes.
-    # First run also includes weight download — extend further if HF is slow.
+    # start_period generous to cover:
+    #   - torch.compile + CUDAGraphs warmup (~50s with cached weights)
+    #   - First-run HF download at unauthenticated rate (~12 MB/s; a 14 GB
+    #     AWQ Gemma 4 26B-A4B takes ~20 min). With HF_TOKEN set, more like
+    #     2-5 min.
     healthcheck:
       test: ["CMD-SHELL", "curl -fs http://127.0.0.1:8000/health || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 5
-      start_period: 600s
+      start_period: 1800s
 
     # Shared memory for torch tensors. vLLM official image recommends ≥16 GB.
     shm_size: "16g"

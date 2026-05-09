@@ -164,19 +164,63 @@ curl -s http://127.0.0.1:8000/v1/chat/completions \
 
 ## Performance baseline (2026-05-09)
 
-Configuration: vLLM v0.20.2, Llama 3.1 8B Instruct (unsloth mirror, identical weights),
-bf16, max_model_len=8192, gpu_memory_utilization=0.9, no `--enforce-eager`
-(torch.compile + CUDAGraphs on).
+Two configurations measured on this hardware
+(vLLM v0.20.2, max_model_len=32768, gpu_memory_utilization=0.9,
+no `--enforce-eager` — torch.compile + CUDAGraphs on).
+
+### Llama 3.1 8B Instruct (initial bring-up)
 
 | Metric | Value |
 |---|---|
-| Cold start (weights cached) | ~80s (compile + CUDAGraph capture) |
-| Weight load to VRAM | 5.98s (~16 GB at ~2.66 GB/s — TB4-saturated) |
-| Steady-state decode | 97.6 / 98.8 / 98.8 tok/s (3 runs, 250 tokens each) |
-| VRAM at idle (model + KV reserve) | ~17.4 GiB / 32.6 GiB |
-| First request after start | ~50s (deferred kernel compile) |
+| Architecture | Dense, 8B params, all active per token |
+| Quantisation | bf16 |
+| Weights size | ~16 GB |
+| Cold start (weights cached) | ~80s |
+| Weight load to VRAM | 5.98s (TB4-saturated, ~2.66 GB/s) |
+| Steady-state decode (250 tok ×3) | 97.6 / 98.8 / 98.8 tok/s |
+| VRAM at idle | ~17.4 GiB / 32.6 GiB |
+| OpenCode tool-call reliability | mediocre — 2-3 retries on JSON schema |
 
-For comparison, the previous `ollama` deployment on this hardware reached 105% of WSL2 parity on
-Llama 3.1 8B (per `aorus-5090-egpu`'s `feedback_perf_parity_confirmed.md` memory entry,
-measured 2026-05-04). vLLM at ~98 tok/s is broadly in the same envelope and benefits from
-PagedAttention + continuous batching for multi-request workloads.
+### Gemma 4 26B-A4B (current default)
+
+Released 2026-05-07; AWQ-4bit via `cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit`.
+
+| Metric | Value |
+|---|---|
+| Architecture | **MoE**, 26B total / **4B active per token** |
+| Quantisation | AWQ-4bit (Marlin kernel for WNA16 MoE) |
+| Weights size | 16.0 GB |
+| Cold start (weights cached) | ~110s (Triton attention + larger compile graph) |
+| Weight load to VRAM | 40.6s (AWQ dequant during load) |
+| Steady-state decode (250 tok ×3) | **222.7 / 223.8 / 223.8 tok/s** |
+| VRAM at idle | 16.47 GiB / 32.6 GiB |
+| Multimodal | yes (vision + video; not exercised by default) |
+| OpenCode tool-call reliability | clean first-shot; native `gemma4` parser |
+
+The MoE architecture is the win:
+26B reasoning capacity with the per-token compute of a 4B model.
+Decode is **2.3× faster** than dense Llama 3.1 8B
+on the same hardware,
+and tool-call accuracy is dramatically better
+(zero retries on the OpenCode bash tool vs. several for Llama 3.1 8B).
+
+For comparison,
+the previous `ollama` deployment on this hardware reached 105% of WSL2 parity on Llama 3.1 8B
+(per `aorus-5090-egpu`'s `feedback_perf_parity_confirmed.md` memory entry,
+measured 2026-05-04).
+Gemma 4 26B-A4B at ~223 tok/s sets a new ceiling for this stack.
+
+### Switching models
+
+```bash
+# Default (Gemma 4 26B-A4B):
+docker compose up -d
+
+# Swap to Llama 3.1 8B (or any HF repo) without editing the compose file:
+VLLM_MODEL=unsloth/Meta-Llama-3.1-8B-Instruct \
+    VLLM_SERVED_NAME=llama-3.1-8b-it \
+    docker compose up -d
+```
+
+Then update `~/.config/opencode/opencode.json` so the `models` key under `vllm-local`
+matches the new `served-model-name`.
