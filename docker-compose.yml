@@ -46,11 +46,20 @@ services:
       - /root/.cache/vllm:/root/.cache/vllm
 
     # vLLM args:
-    #   --model              the HF repo or local path
-    #   --max-model-len      cap context for memory budget (Llama 3.1 native is
-    #                        128k; 8192 is plenty for v1 + leaves KV cache room)
-    #   --gpu-memory-utilization  fraction of VRAM to use (default 0.9)
-    #   --dtype auto         picks bf16 for Llama 3.1 (model-native)
+    #   --model                          HF repo or local path
+    #   --max-model-len                  cap context (Llama 3.1 native is 128k;
+    #                                    32768 leaves KV-cache headroom for
+    #                                    multiple parallel seqs and is enough
+    #                                    for OpenCode's agent-mode prompts)
+    #   --gpu-memory-utilization         fraction of VRAM to use (default 0.9)
+    #   --dtype auto                     picks bf16 for Llama 3.1
+    #   --enable-auto-tool-choice        accept OpenAI-format `tool_choice: auto`
+    #                                    payloads (OpenCode + most agentic
+    #                                    clients send these)
+    #   --tool-call-parser=llama3_json   parser that matches Llama 3.1's tool-call
+    #                                    output format (don't change for non-Llama
+    #                                    models; valid options: hermes, mistral,
+    #                                    llama3_json, llama4_json, granite, ...)
     #
     # No --enforce-eager: torch.compile + CUDAGraphs are on (~10-20% faster
     # decode, ~2-5 min slower cold start while CUDAGraphs compile). Flip on
@@ -58,9 +67,11 @@ services:
     # decode speed (debugging, cold-boot CI, etc.).
     command:
       - "--model=${VLLM_MODEL:-unsloth/Meta-Llama-3.1-8B-Instruct}"
-      - "--max-model-len=8192"
+      - "--max-model-len=32768"
       - "--gpu-memory-utilization=0.90"
       - "--dtype=auto"
+      - "--enable-auto-tool-choice"
+      - "--tool-call-parser=llama3_json"
 
     # Healthcheck via the OpenAI-compatible /health endpoint.
     # start_period generous: with torch.compile + CUDAGraphs (no --enforce-eager),
