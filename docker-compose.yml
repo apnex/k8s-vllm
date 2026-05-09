@@ -1,0 +1,80 @@
+# vLLM OpenAI-compatible API server on the AORUS RTX 5090 eGPU.
+#
+# Defaults: localhost-only (no LAN/WAN exposure), Llama 3.1 8B Instruct
+# (unsloth ungated mirror — identical weights to meta-llama/), HF cache
+# bind-mounted from the host so weights persist across container recreates.
+#
+# Bring-up:
+#   docker compose up -d
+#   docker compose logs -f                # watch model load (~1-2 min cold)
+#
+# Tear-down:
+#   docker compose down                   # stops + removes container; weights stay in HF cache
+#
+# Verify (once "Application startup complete." appears in logs):
+#   curl -s http://127.0.0.1:8000/v1/models | jq
+#   curl -s http://127.0.0.1:8000/health
+#
+# Override the model with VLLM_MODEL in /root/vllm/.env (gitignored).
+
+services:
+  vllm:
+    image: vllm/vllm-openai:v0.20.2
+    container_name: aorus-vllm
+    restart: unless-stopped
+
+    # GPU passthrough via the legacy nvidia runtime — works across
+    # docker-compose versions; CDI request format is an alternative.
+    runtime: nvidia
+    environment:
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+      # Keep first-load HF download off the model thread so we see progress.
+      HF_HUB_ENABLE_HF_TRANSFER: "1"
+      # Optional: pin HF cache inside container to the bind-mount.
+      HF_HOME: /root/.cache/huggingface
+
+    # Localhost-only port binding for v1. Drop the 127.0.0.1: prefix to
+    # expose on LAN — and add an --api-key in command if you do.
+    ports:
+      - "127.0.0.1:8000:8000"
+
+    volumes:
+      # Persist HF cache across container recreates. ~16 GB for Llama 3.1 8B.
+      - /root/.cache/huggingface:/root/.cache/huggingface
+      # vLLM's torch compile cache (saves ~30s on subsequent starts).
+      - /root/.cache/vllm:/root/.cache/vllm
+
+    # vLLM args:
+    #   --model              the HF repo or local path
+    #   --max-model-len      cap context for memory budget (Llama 3.1 native is
+    #                        128k; 8192 is plenty for v1 + leaves KV cache room)
+    #   --gpu-memory-utilization  fraction of VRAM to use (default 0.9)
+    #   --dtype auto         picks bf16 for Llama 3.1 (model-native)
+    #
+    # No --enforce-eager: torch.compile + CUDAGraphs are on (~10-20% faster
+    # decode, ~2-5 min slower cold start while CUDAGraphs compile). Flip on
+    # by re-adding `- "--enforce-eager"` if startup time matters more than
+    # decode speed (debugging, cold-boot CI, etc.).
+    command:
+      - "--model=${VLLM_MODEL:-unsloth/Meta-Llama-3.1-8B-Instruct}"
+      - "--max-model-len=8192"
+      - "--gpu-memory-utilization=0.90"
+      - "--dtype=auto"
+
+    # Healthcheck via the OpenAI-compatible /health endpoint.
+    # start_period generous: with torch.compile + CUDAGraphs (no --enforce-eager),
+    # cold start can run 5+ min while graphs are captured for various batch sizes.
+    # First run also includes weight download — extend further if HF is slow.
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://127.0.0.1:8000/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 600s
+
+    # Shared memory for torch tensors. vLLM official image recommends ≥16 GB.
+    shm_size: "16g"
+
+    # Use host IPC for NCCL (required by some vLLM paths even single-GPU).
+    ipc: host

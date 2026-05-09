@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Idempotent installer for the Docker-based vLLM stack.
 #
-# 1. Verifies the host platform (aorus-5090-gpu) is healthy.
+# 1. Verifies the host platform (aorus-5090-egpu) is healthy.
 # 2. Adds NVIDIA's container toolkit dnf repo.
 # 3. Installs nvidia-container-toolkit.
 # 4. Configures Docker runtime for nvidia (preserves existing daemon.json keys).
@@ -24,10 +24,10 @@ red() { printf '\033[31m%s\033[0m\n' "$*" >&2; }
 step() { printf '\n=== %s ===\n' "$*"; }
 
 # ---------------------------------------------------------- platform check --
-step "verify platform (aorus-5090-gpu) is healthy"
+step "verify platform (aorus-5090-egpu) is healthy"
 
-if [[ -x /root/aorus-5090-gpu/status.sh ]]; then
-    if /root/aorus-5090-gpu/status.sh > /tmp/aorus-status-pre-vllm.$$ 2>&1; then
+if [[ -x /root/aorus-5090-egpu/status.sh ]]; then
+    if /root/aorus-5090-egpu/status.sh > /tmp/aorus-status-pre-vllm.$$ 2>&1; then
         green "  platform status: HEALTHY"
         rm -f /tmp/aorus-status-pre-vllm.$$
     else
@@ -41,7 +41,7 @@ if [[ -x /root/aorus-5090-gpu/status.sh ]]; then
         yellow "  AORUS_VLLM_SKIP_PLATFORM_CHECK=1 - proceeding"
     fi
 else
-    yellow "  /root/aorus-5090-gpu/status.sh not found; skipping platform check"
+    yellow "  /root/aorus-5090-egpu/status.sh not found; skipping platform check"
 fi
 
 # -------------------------------------------------- docker daemon running --
@@ -77,6 +77,20 @@ if rpm -q nvidia-container-toolkit >/dev/null 2>&1; then
 else
     dnf install -y nvidia-container-toolkit
     rpm -q nvidia-container-toolkit
+fi
+
+# -------------------------------------------------- generate CDI spec --
+step "generate Container Device Interface (CDI) spec for nvidia"
+
+# Toolkit ≥1.18 requires a CDI spec for `--gpus all` / docker-compose `runtime: nvidia`
+# to discover the GPU. Without this, Docker errors with
+# "AMD CDI spec not found" / "no known GPU vendor found from CDI".
+if [[ ! -f /etc/cdi/nvidia.yaml ]]; then
+    mkdir -p /etc/cdi
+    nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml
+    echo "  /etc/cdi/nvidia.yaml generated"
+else
+    echo "  /etc/cdi/nvidia.yaml already exists"
 fi
 
 # -------------------------------------------------- configure docker runtime
@@ -124,10 +138,16 @@ step "next steps"
 cat <<'EOF'
 setup.sh complete.
 
-To validate GPU passthrough, run:
-    sudo /root/vllm/tools/docker-gpu-smoke.sh
+Validate GPU passthrough (one-liner):
+    docker run --rm --gpus all nvidia/cuda:13.0.0-base-ubi9 nvidia-smi -L
 
-That runs a small NVIDIA CUDA test image with --gpus all and confirms
-nvidia-smi sees the RTX 5090 from inside the container. If that passes,
-the next step is to pull the vLLM image and start the model load test.
+If that prints "GPU 0: NVIDIA GeForce RTX 5090 ...", you're good.
+
+Bring up the vLLM service:
+    cd /root/vllm
+    docker compose up -d
+    docker compose logs -f               # watch model load
+    curl -s http://127.0.0.1:8000/v1/models | jq
+
+See the README.md "Smoke test" section for the end-to-end inference test.
 EOF

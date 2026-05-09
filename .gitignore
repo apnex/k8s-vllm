@@ -20,3 +20,10 @@ __pycache__/
 
 # Test transient output (canonical results live in archive/ once captured)
 /root/aorus-vllm-tty-test/
+
+# Local secrets — HF token etc.
+.env
+.env.local
+
+# Compose runtime state
+.vllm-compose-up.log
