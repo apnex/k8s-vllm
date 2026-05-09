@@ -242,11 +242,9 @@ The companion `aorus-5090-egpu/status.sh` snapshot goes alongside.
 
 | Field | Value |
 |---|---|
-| Status | **DEFERRED** |
+| Status | **OUT OF SCOPE** (2026-05-09) |
 | Stated | 2026-05-09 |
-| Motivation | OpenCode supports per-agent model assignment. Light agents (file-list, ripgrep-summary) don't need 30B-class quality. Run 26B MoE on vLLM for build/plan, run a 1–4B model on Ollama for fast tool-summary sub-agents. Memory carve-out tricky — both need GPU. |
-| Quality gate | OpenCode's overall task success rate stays flat. |
-| Test plan | TBD; needs OpenCode multi-agent config investigation. |
+| Closed | 2026-05-09 — host is vLLM-only by user preference. Ollama systemd integration retired in companion repo on the same date; reintroducing it via dual-model would reverse that decision. If a "fast small model for light sub-agents" need re-emerges, the right answer is a second vLLM instance (memory-carved on the same GPU) or a different OpenCode multi-agent config that picks a different served model from the *same* vLLM. |
 
 ### H10 — torch.compile + CUDAGraph capture tuning
 
@@ -285,5 +283,6 @@ Inherited from `perf-roadmap.md` §3. Status: **DEFERRED**.
 | **Phase 3 — Quality / context** | H5, H7 | Bigger context + FP8 weights |
 | **Phase 4 — Concurrency** | H4 | Tune for OpenCode sub-agent fan-out |
 | **Phase 5 — Speculative-with-draft** | H8 | Last-mile decode speedup |
-| **Phase 6 — Multi-model** | H9 | Heavy + light split for agentic workflows |
-| **Phase 7 — Cold-load** | H11–H13 | Inherited from perf-roadmap |
+| **Phase 6 — Cold-load** | H11–H13 | Inherited from perf-roadmap; deferred until steady-state phases land |
+
+(H9 dual-model removed — host is vLLM-only by user preference, see H9 entry.)
