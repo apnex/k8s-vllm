@@ -1,0 +1,10 @@
+{"problem":"affine-cipher","pass":true,"time_s":2.53,"completion_tokens":568}
+{"problem":"beer-song","pass":true,"time_s":15.63,"completion_tokens":2913}
+{"problem":"book-store","pass":false,"time_s":3.74,"completion_tokens":810}
+{"problem":"bottle-song","pass":false,"time_s":1.81,"completion_tokens":387}
+{"problem":"bowling","pass":false,"time_s":20.18,"completion_tokens":4096}
+{"problem":"connect","pass":true,"time_s":3.67,"completion_tokens":818}
+{"problem":"dominoes","pass":true,"time_s":12.92,"completion_tokens":2808}
+{"problem":"dot-dsl","pass":true,"time_s":2.61,"completion_tokens":568}
+{"problem":"food-chain","pass":false,"time_s":19.31,"completion_tokens":4096}
+{"problem":"forth","pass":false,"time_s":22.05,"completion_tokens":4096}

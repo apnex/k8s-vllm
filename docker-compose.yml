@@ -80,7 +80,13 @@ services:
       - "--gpu-memory-utilization=0.90"
       - "--dtype=auto"
       - "--enable-auto-tool-choice"
-      - "--tool-call-parser=gemma4"
+      # Tool-call parser must match the model family. Override via .env:
+      #   Llama 3.x → llama3_json, Llama 4.x → llama4_pythonic,
+      #   Mistral → mistral, Hermes → hermes,
+      #   Gemma 4 → gemma4, Qwen 3 → qwen3_xml, Qwen 3 Coder → qwen3_coder
+      # (Full list shown in vLLM's KeyError if you pick a name it doesn't
+      # know — see vllm/entrypoints/openai/tool_parsers/.)
+      - "--tool-call-parser=${VLLM_TOOL_PARSER:-gemma4}"
 
     # Healthcheck via the OpenAI-compatible /health endpoint.
     # start_period generous to cover:

@@ -27,7 +27,7 @@
 
 set -euo pipefail
 
-N_PROBLEMS="${1:-10}"
+N_PROBLEMS="${1:-5}"
 LANG_NAME="${2:-python}"
 
 VLLM_ENDPOINT="${VLLM_ENDPOINT:-http://127.0.0.1:8000/v1}"

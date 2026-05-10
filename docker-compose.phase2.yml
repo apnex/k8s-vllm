@@ -1,0 +1,47 @@
+# Phase 2 compose overlay — H2 (n-gram speculative) + H3 (FP8 KV cache).
+#
+# Usage:
+#   # Phase 0/1 (current — baseline, single H1 model swap via .env):
+#   docker compose up -d
+#
+#   # Phase 2 (H2 + H3 enabled on top of base):
+#   docker compose -f docker-compose.yml -f docker-compose.phase2.yml up -d
+#
+# Why a full command list here: docker-compose REPLACES list keys when
+# merging overlays (it does not append). So this file carries the
+# entire command list = base command + the H2/H3 args at the end.
+# When the base compose's command list changes, this file must be
+# updated in lockstep.
+#
+# Hypotheses tested by this overlay:
+#   H2 — n-gram speculative decoding (1.3-1.8× decode, no quality cost
+#        on greedy / temp=0); free win for code-style repetition.
+#   H3 — FP8 KV cache halves KV memory, frees ~7 GB at 32k context.
+#        Quality risk: NVIDIA reports <0.5pp; gate on Aider Polyglot
+#        ≥ baseline -2pp.
+#
+# Quality gate (mandatory before declaring proven):
+#   ./tools/polyglot-bench.sh 5 python
+# Compare results.jsonl pass-rate vs Phase 0/1 baseline at the same
+# served model.
+
+services:
+  vllm:
+    command:
+      - "--model=${VLLM_MODEL:-cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit}"
+      - "--served-model-name=${VLLM_SERVED_NAME:-gemma-4-26b-a4b-it}"
+      - "--max-model-len=32768"
+      - "--max-num-batched-tokens=8192"
+      - "--gpu-memory-utilization=0.90"
+      - "--dtype=auto"
+      - "--enable-auto-tool-choice"
+      - "--tool-call-parser=${VLLM_TOOL_PARSER:-gemma4}"
+      # H2: n-gram speculative. The prompt-lookup-max=4 looks for runs
+      # of up to 4 prompt tokens that match the current decode tail.
+      # num_speculative_tokens=5 is the standard default; vLLM accepts
+      # the partial match if any prefix matches.
+      - --speculative-config={"method":"ngram","num_speculative_tokens":5,"prompt_lookup_max":4}
+      # H3: FP8 KV cache. Halves KV memory at minimal quality loss.
+      # Blackwell sm_120 has native FP8 tensor cores so this is also
+      # a small perf win.
+      - "--kv-cache-dtype=fp8"

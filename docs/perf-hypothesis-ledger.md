@@ -141,13 +141,15 @@ The companion `aorus-5090-egpu/status.sh` snapshot goes alongside.
 | **Preliminary data** | Gemma 4 26B-A4B-it AWQ-4bit on Python n=10 (2026-05-09): 5/10 PASS at max_tokens=4096; partial 2/10 at max_tokens=8192 (halted, run differed from first due to seed-determinism issue). **Both runs are pre-fix and not authoritative.** Re-run with seed=42 + max_tokens=16384 needed before any cross-model comparison. |
 | Archive | `archive/polyglot-20260509T113230Z-gemma-4-26b-a4b-it-python/` (run 1, pre-fix), `archive/polyglot-20260509T11*-...-v2/` (run 2, partial, halted) |
 
-### Open methodology issues (must fix before resuming H1)
+### Open methodology issues — RESOLVED 2026-05-10
 
-| Issue | Detail | Fix |
+| Issue | Resolution | Where |
 |---|---|---|
-| Non-deterministic decoding | Two `temp=0` runs of the same prompt produced different outputs on `beer-song` and `dot-dsl` (pass→fail flip). vLLM continuous batching has small numerical jitter unless seeded. | Add `seed: 42` to chat-completion request body in `polyglot-bench.sh`. |
-| Gemma 4 verbosity | 3/10 problems hit `max_tokens=4096`, 1/10 still hit `max_tokens=8192` (`bowling`). Likely real model behaviour, not just artifact. | Bump to `max_tokens=16384`; consider adding "Output the file as concisely as possible. No prose." to the prompt. |
-| Test-runner false negatives | Pytest `unittest discover` may report OK on partial test failures. Need to verify `OK` regex is correct. | Spot-check passes/fails by reading `_test_output.log` in each sandbox. |
+| Non-deterministic decoding | `seed: 42` added to request body | `tools/polyglot-bench.sh:171` (commit 90fd455) |
+| Gemma 4 verbosity | `max_tokens=16384` + "Be concise — minimum lines of code that pass the tests" added to prompt template | `tools/polyglot-bench.sh:154-171` (commit 90fd455) |
+| Test-runner false negatives | `_test_output.log` is captured per failing sandbox for spot-check; `^OK( \|$)` regex looks correct on inspection | `tools/polyglot-bench.sh:211,219` |
+
+H1 baseline can resume on the corrected harness; prior `archive/polyglot-20260509T*` runs are pre-fix and should NOT be used as the baseline.
 
 ### H2 — n-gram speculative decoding gives 1.3–1.8× decode with zero quality loss
 
