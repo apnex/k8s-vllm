@@ -1,0 +1,97 @@
+{
+  "ts_utc": "20260510T103548Z",
+  "model": "qwen2.5-coder-32b",
+  "label": "qwen2.5-coder-32b-triton",
+  "config": {
+    "completion_tokens": 256,
+    "concurrent": 4,
+    "sequential": 3
+  },
+  "sequential": {
+    "ttft_s": {
+      "median": 0.017061779000869137,
+      "min": 0.016998989000057918,
+      "max": 0.018185452001489466
+    },
+    "decode_tps": {
+      "median": 79.05206883124332,
+      "min": 79.04671204219112,
+      "max": 79.07336757299957
+    },
+    "runs": [
+      {
+        "ttft_s": 0.017061779000869137,
+        "decode_s": 3.238591376999466,
+        "decode_tps": 79.04671204219112,
+        "completion_tokens": 256,
+        "e2e_s": 3.255653156000335,
+        "chunks": 256
+      },
+      {
+        "ttft_s": 0.016998989000057918,
+        "decode_s": 3.2383719209992705,
+        "decode_tps": 79.05206883124332,
+        "completion_tokens": 256,
+        "e2e_s": 3.2553709099993284,
+        "chunks": 256
+      },
+      {
+        "ttft_s": 0.018185452001489466,
+        "decode_s": 3.2374996519993147,
+        "decode_tps": 79.07336757299957,
+        "completion_tokens": 256,
+        "e2e_s": 3.255685104000804,
+        "chunks": 256
+      }
+    ]
+  },
+  "concurrent": {
+    "wall_s": 3.334,
+    "aggregate_tps": 307.13857228554286,
+    "runs": [
+      {
+        "ttft_s": 0.03618197300056636,
+        "decode_s": 3.2605007530000876,
+        "decode_tps": 78.51554696451043,
+        "completion_tokens": 256,
+        "e2e_s": 3.296682726000654,
+        "chunks": 256
+      },
+      {
+        "ttft_s": 0.03668137000022398,
+        "decode_s": 3.260465266999745,
+        "decode_tps": 78.51640150596336,
+        "completion_tokens": 256,
+        "e2e_s": 3.297146636999969,
+        "chunks": 256
+      },
+      {
+        "ttft_s": 0.040310182001121575,
+        "decode_s": 3.2602332409987866,
+        "decode_tps": 78.52198940268865,
+        "completion_tokens": 256,
+        "e2e_s": 3.300543422999908,
+        "chunks": 256
+      },
+      {
+        "ttft_s": 0.040787841000565095,
+        "decode_s": 3.248775170999579,
+        "decode_tps": 78.79892775751368,
+        "completion_tokens": 256,
+        "e2e_s": 3.2895630120001442,
+        "chunks": 256
+      }
+    ]
+  },
+  "metrics_delta": {
+    "prompt_tokens": 1662.0,
+    "generation_tokens": 1795.0,
+    "prefix_cache_queries": 1662.0,
+    "prefix_cache_hits": 1360.0,
+    "prefix_cache_hit_rate": 0.8182912154031288
+  },
+  "gpu": {
+    "pre_csv": "81, 31095, 32607, 50",
+    "post_csv": "100, 31095, 32607, 55"
+  }
+}

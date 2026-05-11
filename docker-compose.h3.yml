@@ -1,0 +1,43 @@
+# H3 isolated overlay — FP8 KV cache via per-token-head dynamic scales.
+#
+# vLLM 0.20.2 supports two FP8 KV cache paths:
+#
+#   1. --kv-cache-dtype=fp8 (e4m3) + static per-tensor scales loaded from
+#      the model checkpoint (or default to 1.0 with quality regression).
+#      The deprecated --calculate-kv-scales flag was the runtime-calibrate
+#      option; deprecated in 0.20.x for removal.
+#   2. --kv-cache-dtype=fp8_per_token_head — vLLM computes scales
+#      dynamically per token per attention head at runtime, no calibration
+#      needed and no per-tensor "default scales = 1.0" quality cliff.
+#      Implemented exclusively in triton_attn backend, which advertises
+#      AttentionCGSupport.ALWAYS (highest CG support level).
+#
+# This overlay uses path 2 because path 1 was empirically falsified
+# 2026-05-10 (combined H2+H3 test, polyglot 4/5 -> 3/5; vLLM warned at
+# startup that scales would default to 1.0 since the AWQ-4bit checkpoint
+# doesn't ship FP8 KV scales).
+#
+# Side effect: forces triton_attn backend (FA2/FlashInfer don't support
+# per_token_head dtype). Triton kernels are typically 5-15% slower than
+# FA2/FlashInfer for non-spec decode; net should still be positive if H3
+# delivers KV memory savings + bigger-context (H5) headroom.
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.h3.yml up -d
+#
+# Quality gate: polyglot-bench 5 python must hold >= H1-baseline (4/5).
+# Perf gate: perf-snapshot.sh --label H3-only-pth.
+
+services:
+  vllm:
+    command:
+      - "--model=${VLLM_MODEL:-cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit}"
+      - "--served-model-name=${VLLM_SERVED_NAME:-gemma-4-26b-a4b-it}"
+      - "--max-model-len=32768"
+      - "--max-num-batched-tokens=8192"
+      - "--gpu-memory-utilization=0.90"
+      - "--dtype=auto"
+      - "--enable-auto-tool-choice"
+      - "--tool-call-parser=${VLLM_TOOL_PARSER:-gemma4}"
+      # H3: FP8 KV cache with dynamic per-token-head scales.
+      - "--kv-cache-dtype=fp8_per_token_head"

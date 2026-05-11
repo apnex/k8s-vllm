@@ -1,0 +1,45 @@
+# H2 isolated overlay — n-gram speculative decoding only.
+#
+# Critical detail learned 2026-05-10: the vLLM auto-selector picks
+# FlashInferBackend when spec-decode is enabled, which forces a
+# CUDAGraph mode downgrade from FULL_AND_PIECEWISE to PIECEWISE-only
+# (FlashInfer reports cudagraph_support = UNIFORM_SINGLE_TOKEN_DECODE
+# = 1, below the UNIFORM_BATCH = 2 threshold required for spec-decode +
+# FULL graphs). This single backend choice was responsible for the
+# decode-tok/s regression seen in the combined Phase 2 test.
+#
+# Forcing VLLM_ATTENTION_BACKEND=FLASH_ATTN keeps the CG mode at
+# FULL_AND_PIECEWISE (FA2 reports UNIFORM_BATCH = 2, exactly at the
+# threshold; FA3 reports ALWAYS = 3 and is even better if available).
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.h2.yml up -d
+#
+# Notes:
+#   - File carries the full base command list because docker-compose
+#     overlay merging REPLACES list keys (it doesn't append).
+#   - This file does NOT enable FP8 KV (H3) — keep that variable
+#     isolated for its own test.
+#   - To layer with H3 later (only after H3 is independently proven):
+#     docker compose -f docker-compose.yml -f docker-compose.h2.yml \
+#                    -f docker-compose.h3.yml up -d
+
+services:
+  vllm:
+    environment:
+      VLLM_ATTENTION_BACKEND: FLASH_ATTN
+      # Keep all the base environment vars (compose merges environment
+      # maps by union, not replace, so they're inherited from base).
+    command:
+      - "--model=${VLLM_MODEL:-cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit}"
+      - "--served-model-name=${VLLM_SERVED_NAME:-gemma-4-26b-a4b-it}"
+      - "--max-model-len=32768"
+      - "--max-num-batched-tokens=8192"
+      - "--gpu-memory-utilization=0.90"
+      - "--dtype=auto"
+      - "--enable-auto-tool-choice"
+      - "--tool-call-parser=${VLLM_TOOL_PARSER:-gemma4}"
+      # H2: n-gram speculative. num_speculative_tokens=5 matches Phase 2's
+      # config (the variable we're isolating); prompt_lookup_max=4 is the
+      # standard window for code-style repetition.
+      - --speculative-config={"method":"ngram","num_speculative_tokens":5,"prompt_lookup_max":4}

@@ -1,0 +1,16 @@
+# H5 push #3 — bump max-model-len to 120k (122880).
+# vLLM reported at 128k attempt: "estimated maximum model length is 123584".
+# So 120k = 122880 should fit just under that ceiling.
+# Needs gpu-memory-utilization=0.95 (same as the 128k attempt).
+
+services:
+  vllm:
+    command:
+      - "--model=${VLLM_MODEL:-cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit}"
+      - "--served-model-name=${VLLM_SERVED_NAME:-gemma-4-26b-a4b-it}"
+      - "--max-model-len=122880"
+      - "--max-num-batched-tokens=8192"
+      - "--gpu-memory-utilization=0.95"
+      - "--dtype=auto"
+      - "--enable-auto-tool-choice"
+      - "--tool-call-parser=${VLLM_TOOL_PARSER:-gemma4}"

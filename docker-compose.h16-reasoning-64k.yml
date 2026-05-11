@@ -1,0 +1,48 @@
+# H16 reasoning + 64k overlay — DeepSeek-R1-Distill-Qwen-32B-AWQ at 64k context.
+#
+# This stacks four levers to fit reasoning into a usable context budget:
+#
+# 1. --kv-cache-dtype=fp8_per_token_head  (H3 — FP8 KV with dynamic per-token-head
+#    scales, no calibration needed. Halves KV memory: 245 → 122 bytes/token.
+#    Forces TRITON_ATTN backend; H17 proved triton-on-dense is quality-clean
+#    (the bug was MoE-specific). Lets 64k KV fit in 7.85 GB vs 15.7 GB bf16.)
+#
+# 2. --gpu-memory-utilization=0.94  (bumped from production 0.92 to recover
+#    the cudagraph profiling overhead vLLM was reserving. With env var below,
+#    effective allocation = full 0.94.)
+#
+# 3. VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS=0  (stops vLLM from reserving
+#    ~0.86 GB for cudagraph memory profiling estimate. CUDA graphs still
+#    captured; just no longer over-reserved.)
+#
+# 4. cpuset: "6-13"  (H21 — pin to E-cores; keeps CPU pkg temp <70 °C under
+#    sustained inference, vs 105 °C with default scheduler placement.)
+#
+# Custom chat template injects <think>\n after <｜Assistant｜> (the casperhansen
+# AWQ variant doesn't ship that injection; reasoning never engages otherwise).
+#
+# Quality gate: H3 + dense substrate is the right isolated retest for H3
+# (originally tangled in the H2+H3 combined run that the user flagged). If
+# polyglot pass-rate matches or exceeds 32k-bf16 baseline on this model, H3
+# is RESOLVED for dense. Side benefit: unlocks 96k FP8-KV path for production
+# Qwen3-Coder MoE later (separate H entry).
+
+services:
+  vllm:
+    cpuset: "6-13"
+    environment:
+      VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS: "0"
+    volumes:
+      - /root/vllm/chat-templates:/chat-templates:ro
+    command:
+      - "--model=${VLLM_MODEL:-cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit}"
+      - "--served-model-name=${VLLM_SERVED_NAME:-gemma-4-26b-a4b-it}"
+      - "--max-model-len=65536"
+      - "--max-num-batched-tokens=8192"
+      - "--gpu-memory-utilization=0.94"
+      - "--kv-cache-dtype=fp8_per_token_head"
+      - "--dtype=auto"
+      - "--enable-auto-tool-choice"
+      - "--tool-call-parser=${VLLM_TOOL_PARSER:-hermes}"
+      - "--reasoning-parser=deepseek_r1"
+      - "--chat-template=/chat-templates/r1-distill-think.jinja"

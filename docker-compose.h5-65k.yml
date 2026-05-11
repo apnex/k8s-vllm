@@ -1,0 +1,30 @@
+# H5 retest overlay — bump --max-model-len from 32768 to 65536.
+#
+# Hypothesis (revised 2026-05-10): bf16 KV at 64k on Qwen3-Coder-30B-A3B
+# (4 KV heads × 48 layers × 128 head-dim × 2 = 96 KB/token) fits in our
+# 32 GB VRAM budget at gpu-memory-utilization=0.92:
+#   weights ~17 GB + KV @ 64k ~6 GB + activations ~3 GB ≈ 26 GB
+#   leaves ~4 GB headroom under the 30 GB budget
+#
+# If this works, the original H5 framing (gated on FP8 KV via H3) was
+# wrong — we never needed FP8 KV; we just needed to actually try the
+# higher max-model-len with bf16 KV.
+#
+# Compose merging note: list keys (command:) are REPLACED, not appended,
+# so this file carries the full command list with just max-model-len
+# changed.
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.h5-65k.yml up -d
+
+services:
+  vllm:
+    command:
+      - "--model=${VLLM_MODEL:-cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit}"
+      - "--served-model-name=${VLLM_SERVED_NAME:-gemma-4-26b-a4b-it}"
+      - "--max-model-len=65536"
+      - "--max-num-batched-tokens=8192"
+      - "--gpu-memory-utilization=0.92"
+      - "--dtype=auto"
+      - "--enable-auto-tool-choice"
+      - "--tool-call-parser=${VLLM_TOOL_PARSER:-gemma4}"

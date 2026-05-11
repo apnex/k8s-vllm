@@ -1,0 +1,16 @@
+# H5 push #2 — bump max-model-len to 128k (131072) at higher gpu-mem.
+# Math: ~12 GB KV @ 128k + 17 GB weights + 3 GB workspace ≈ 32 GB.
+# Borderline — needs gpu-memory-utilization=0.95 (~31 GB budget).
+# If this OOMs, the absolute max stable context is somewhere between 96k and 128k.
+
+services:
+  vllm:
+    command:
+      - "--model=${VLLM_MODEL:-cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit}"
+      - "--served-model-name=${VLLM_SERVED_NAME:-gemma-4-26b-a4b-it}"
+      - "--max-model-len=131072"
+      - "--max-num-batched-tokens=8192"
+      - "--gpu-memory-utilization=0.95"
+      - "--dtype=auto"
+      - "--enable-auto-tool-choice"
+      - "--tool-call-parser=${VLLM_TOOL_PARSER:-gemma4}"

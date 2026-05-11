@@ -1,0 +1,5 @@
+{"problem":"affine-cipher","pass":false,"time_s":245.49,"completion_tokens":16384}
+{"problem":"beer-song","pass":true,"time_s":106.37,"completion_tokens":6775}
+{"problem":"book-store","pass":false,"time_s":257.02,"completion_tokens":16384}
+{"problem":"bottle-song","pass":false,"time_s":68.09,"completion_tokens":4682}
+{"problem":"bowling","pass":false,"time_s":263.11,"completion_tokens":16384}

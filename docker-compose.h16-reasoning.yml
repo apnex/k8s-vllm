@@ -1,0 +1,47 @@
+# H16 reasoning overlay — for DeepSeek-R1-Distill-Qwen-32B-AWQ.
+#
+# Three things this overlay does that the base config doesn't:
+#
+# 1. --reasoning-parser=deepseek_r1
+#    Separates <think>...</think> blocks into message.reasoning_content,
+#    leaving message.content with just the final answer. Polyglot's
+#    code-block extraction (looks for ```python``` in content) then works
+#    normally — the thinking happens "behind" the API.
+#
+# 2. --chat-template /chat-templates/r1-distill-think.jinja
+#    The casperhansen AWQ variant's bundled chat template does NOT inject
+#    <think>\n after the assistant header — so the model goes into normal
+#    instruct mode and never reasons. (Confirmed empirically 2026-05-11.)
+#    The override template is identical to upstream except the generation
+#    prompt is `<｜Assistant｜><think>\n` instead of just `<｜Assistant｜>`.
+#    Auto-triggers reasoning on every turn. Built from the running model's
+#    own tokenizer.chat_template, only the final clause modified.
+#
+# 3. cpuset: "6-13" (E-cores only)
+#    Per H21 (filed 2026-05-11): pinning vLLM to E-cores drops NUC package
+#    temp from 105 °C → 65 °C. Persistent here for this run; full Pareto
+#    sweep deferred to H21. P-cores (0-5) hard-banned.
+#
+# max-model-len=32768: R1-Distill-Qwen-32B is dense; at 96k it needs 24 GiB
+# KV cache vs ~8 GiB available. vLLM's own estimate caps this model at ~33k.
+# Polyglot problems fit comfortably in 30k with reasoning trace.
+#
+# Compose merging note: list keys (command:) get REPLACED, not appended,
+# so this file carries the full command list.
+
+services:
+  vllm:
+    cpuset: "6-13"
+    volumes:
+      - /root/vllm/chat-templates:/chat-templates:ro
+    command:
+      - "--model=${VLLM_MODEL:-cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit}"
+      - "--served-model-name=${VLLM_SERVED_NAME:-gemma-4-26b-a4b-it}"
+      - "--max-model-len=32768"
+      - "--max-num-batched-tokens=8192"
+      - "--gpu-memory-utilization=0.92"
+      - "--dtype=auto"
+      - "--enable-auto-tool-choice"
+      - "--tool-call-parser=${VLLM_TOOL_PARSER:-hermes}"
+      - "--reasoning-parser=deepseek_r1"
+      - "--chat-template=/chat-templates/r1-distill-think.jinja"

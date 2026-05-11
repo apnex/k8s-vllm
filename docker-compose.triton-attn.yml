@@ -1,0 +1,40 @@
+# Triton attention backend overlay — isolate the perf delta from
+# triton_attn vs the auto-selected FA2 baseline.
+#
+# Surprise finding 2026-05-10: when H3 was tested with
+# --kv-cache-dtype=fp8_per_token_head, vLLM auto-routed to triton_attn
+# (the only backend implementing per_token_head). Decode tok/s went UP
+# to 295.8 (+16.8% vs baseline 253.1), against my prediction of -5..15%.
+# Net result was confounded by the FP8 KV quality regression, but the
+# decode-rate win was real per perf-snapshot.
+#
+# This overlay isolates that win: triton_attn backend + bf16 KV (no
+# FP8). If decode tok/s holds at +16.8% with quality unchanged, we
+# have a clean perf lever independent of any KV quantization scheme.
+#
+# Mechanism: the --attention-backend CLI flag forces backend selection
+# (CLI flag is the supported path in vLLM 0.20.2; the
+# VLLM_ATTENTION_BACKEND env var is NOT supported and produces an
+# "Unknown vLLM environment variable" warning).
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.triton-attn.yml up -d
+#
+# Quality gate: polyglot-bench 5 python must hold == H1-baseline (4/5).
+# Perf gate: perf-snapshot.sh --label triton-attn-bf16-kv.
+
+services:
+  vllm:
+    command:
+      - "--model=${VLLM_MODEL:-cyankiwi/gemma-4-26B-A4B-it-AWQ-4bit}"
+      - "--served-model-name=${VLLM_SERVED_NAME:-gemma-4-26b-a4b-it}"
+      - "--max-model-len=32768"
+      - "--max-num-batched-tokens=8192"
+      # 0.92 to match base compose (bumped 2026-05-10 for Qwen2.5-Coder-32B-AWQ)
+      - "--gpu-memory-utilization=0.92"
+      - "--dtype=auto"
+      - "--enable-auto-tool-choice"
+      - "--tool-call-parser=${VLLM_TOOL_PARSER:-gemma4}"
+      # Force triton_attn explicitly. CLI flag is the supported path in
+      # vLLM 0.20.2.
+      - "--attention-backend=TRITON_ATTN"

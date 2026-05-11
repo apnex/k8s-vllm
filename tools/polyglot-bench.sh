@@ -157,18 +157,23 @@ EOF
 )
 
     # Build JSON body. Notes on the params:
-    # - max_tokens=16384: bumped from 8192 after a single problem (`bowling`,
-    #   2026-05-09) still hit the cap. 16k is generous; truncation is a
-    #   hard-fail signal, never a silent quality issue.
+    # - max_tokens: env-controlled, default 30000. Bumped from 16384 on
+    #   2026-05-11 because reasoning models (R1-Distill, QwQ, etc.) emit
+    #   long <think> traces — H16 first run hit 16384 on 3/4 failures.
+    #   30000 leaves room within a 32k max_model_len. For non-reasoning
+    #   models this just raises the ceiling; they still hit EOS earlier.
+    #   Override via POLYGLOT_MAX_TOKENS=N when needed.
     # - temperature=0.0 + seed=42: REQUIRED for reproducibility. vLLM's
     #   continuous batching has small numerical jitter at temp=0 without
     #   a fixed seed; greedy decoding is NOT byte-identical across runs
     #   otherwise (observed 2026-05-09: same temp=0 prompt produced
     #   different outputs on beer-song and dot-dsl, pass→fail flip).
+    : "${POLYGLOT_MAX_TOKENS:=30000}"
     body=$(jq -nc \
         --arg model "$MODEL_ID" \
         --arg content "$prompt" \
-        '{model: $model, messages: [{role: "user", content: $content}], max_tokens: 16384, temperature: 0.0, seed: 42}')
+        --argjson mt "$POLYGLOT_MAX_TOKENS" \
+        '{model: $model, messages: [{role: "user", content: $content}], max_tokens: $mt, temperature: 0.0, seed: 42}')
 
     t0=$(date +%s.%N)
     resp=$(curl -fsS "$VLLM_ENDPOINT/chat/completions" \

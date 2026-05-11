@@ -1,0 +1,34 @@
+# NVFP4 kernel backend overlay — force a specific GEMM kernel.
+#
+# vLLM 0.20.2's auto-selector iterates _POSSIBLE_NVFP4_KERNELS in priority
+# order, picking the first whose is_supported() returns True. Without
+# this overlay, 2026-05-10 first Gemma 4 31B NVFP4 attempt landed on
+# EmulationNvFp4LinearKernel (the dequant fallback) and OOMed at 30 GB.
+#
+# Forcing a specific backend via VLLM_NVFP4_GEMM_BACKEND is the supported
+# way to bypass the auto-selector. If the forced kernel's is_supported()
+# returns False, vLLM raises ValueError at startup BEFORE allocating
+# weights — we get a fast rejection rather than wasting 60s on weight
+# loading.
+#
+# Try in order:
+#   1. flashinfer-cutlass — native FP4 GEMM via FlashInfer's CUTLASS wrapper
+#   2. cutlass            — native FP4 GEMM via vLLM's direct CUTLASS path
+#   3. marlin             — packed-4-bit Marlin kernel (W4A16); slower compute
+#                           but BF16 activations may give better quality than
+#                           native W4A4 paths
+#   4. flashinfer-trtllm  — TensorRT-LLM via FlashInfer
+#   5. flashinfer-cudnn   — cuDNN via FlashInfer
+#   6. emulation          — known-bad (dequant; 30 GB on Gemma 4 31B)
+#
+# Memory profile of viable backends should be similar (~15 GB packed
+# weights for 30.7B params at NVFP4) — the OOM was specifically
+# emulation falling back to BF16 dequant in HBM.
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.nvfp4-backend.yml up -d
+
+services:
+  vllm:
+    environment:
+      VLLM_NVFP4_GEMM_BACKEND: marlin
