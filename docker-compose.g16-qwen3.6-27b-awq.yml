@@ -1,0 +1,85 @@
+# G16 — Qwen3.6-27B-AWQ-INT4 candidate evaluation.
+#
+# Direct apples-to-apples comparison vs locked production R11
+# (Qwen3-Coder-30B-A3B-AWQ-INT4 / FA2 / bf16-kv / no-spec / 96k).
+# Only the model + tool parser change. Everything else matches R11
+# so any delta is attributable to the model.
+#
+# Why this candidate (per docs/model-config-matrix.md G16):
+# - 77.2% SWE-bench Verified (vs production ~60% polyglot 4/5 R11 equiv)
+# - dense 27B + hybrid Gated DeltaNet (linear) + Gated Attention (full)
+#   architecture — every 4th layer is full attention, 75% linear
+# - INT4 weights ≈ 19 GB → ~13 GB headroom for KV @ bf16 budget
+#   (vs production's ~5 GB KV headroom at 96k)
+# - same maintainer as locked production (cyankiwi) → calibration
+#   dataset "STEM and Agentic" — appropriate for SWE workload
+# - 256K native context (extensible to 1M with YaRN); we test at 96k
+#   for direct R11 comparability first, then push if quality wins
+#
+# Memory budget @ 96k (revised after OOM during first bring-up 2026-05-12):
+#   weights (AWQ-INT4)     ~19 GB
+#   unquantized embeddings + LM head (~152k vocab × ~5k hidden × bf16)
+#                          ~3 GB    (the "AWQ-BF16-INT4" — INT4 linears,
+#                                     bf16 embeddings/norms/heads)
+#   KV cache (bf16, hybrid)  ~2 GB   (hybrid attn means only 25% of
+#                                     layers store full KV; rest are
+#                                     constant-state linear)
+#   workspace / activations  ~4 GB   (higher than predicted; cudagraph
+#                                     capture buffers + AWQ kernel scratch)
+#   profiler reserve         ~0.9 GB (over-reservation from
+#                                     VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS=1
+#                                     default; disabled below)
+#   total                  ~29 GB    (fits in gpu-mem=0.94 with the
+#                                     profiler env var set to 0)
+#
+# Memory-profiler env-var pattern (per h16-reasoning-64k):
+#   VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS=0 — stop vLLM from
+#   reserving ~0.86 GB for cudagraph memory profiling estimate.
+#   CUDA graphs still captured; just no longer over-reserved.
+#   Bump gpu-memory-utilization to 0.94 to take back that headroom.
+#
+# Why CPU pinning (per memory H21 / project_h21_cpu_thermals_2026_05_11):
+#   cpuset: "6-13" — pin to NUC 15 Pro+ E-cores. P-cores (0-5) running
+#   continuation matmuls drove NUC pkg temp 105 → 65 °C delta when
+#   moved to E-cores. Required for sustained inference workloads.
+#
+# Quality gate (pass criteria for production swap):
+#   - polyglot pass rate ≥ R11 baseline (4/5 at n=5)
+#   - decode tok/s within 20% of R11 (253 tok/s baseline)
+#   - VRAM peak < 30 GB
+#   - no MTP / no spec-decode in this initial run — keep one variable
+#     vs R11 baseline
+#
+# Reasoning-parser is qwen3 (per cyankiwi model card) because
+# Qwen3.6-27B is a hybrid reasoning model with thinking-mode toggle.
+# Tool-call-parser is qwen3_coder for SWE workload (vLLM 0.20.2 supports).
+# We do NOT inject a custom chat-template — model ships compatible
+# template; no <think> injection required (unlike R1-distill / h16).
+
+services:
+  vllm:
+    cpuset: "6-13"
+    environment:
+      VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS: "0"
+      # vLLM's own suggestion when KV-cache profiling hits fragmentation.
+      PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
+    command:
+      - "--model=${VLLM_MODEL:-cyankiwi/Qwen3.6-27B-AWQ-INT4}"
+      - "--served-model-name=${VLLM_SERVED_NAME:-qwen3.6-27b}"
+      # Initial bring-up: 65k + --enforce-eager.
+      # Three OOMs (96k, 65k, 65k+LM-only) all failed at the CUDA-graph
+      # profiling step trying to allocate ~1.5 GB it didn't have.
+      # --enforce-eager skips CUDA graph capture entirely — ~20-30%
+      # decode-perf cost but eliminates the profiling allocation path.
+      # Use for initial validation; re-enable cudagraphs once we know
+      # the steady-state allocation breakdown.
+      # --language-model-only dropped: empirically made it WORSE
+      # (30.51 GB vs 29.84 GB without).
+      - "--max-model-len=65536"
+      - "--max-num-batched-tokens=8192"
+      - "--gpu-memory-utilization=0.92"
+      - "--dtype=auto"
+      - "--enforce-eager"
+      - "--enable-auto-tool-choice"
+      - "--tool-call-parser=${VLLM_TOOL_PARSER:-qwen3_coder}"
+      - "--reasoning-parser=${VLLM_REASONING_PARSER:-qwen3}"

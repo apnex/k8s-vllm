@@ -1,0 +1,116 @@
+# G15.A — Qwen3-Coder-Next-AWQ-4bit initial bring-up.
+#
+# Reference: docs/qwen3-coder-next-config-space.md (axis decisions +
+# permutation matrix; this file implements the recommended starting
+# point "G15.A").
+#
+# Why this config (G15.A):
+#   - quant: cyankiwi AWQ-4bit (workflow continuity w/ production R11)
+#   - runtime: vLLM v0.20.2 (same as production)
+#   - offload: --cpu-offload-gb=17 (median-of-design-space; 28 GB GPU
+#     weights + 17 GB CPU experts; leaves ~10 GB for KV+workspace)
+#   - context: 65k (R10-parity; not yet R11-parity at 96k — that's G15.E)
+#   - KV: bf16 (apples-to-apples vs R11; FP8 is a later overlay)
+#   - backend: cudagraphs ON (R11 uses cudagraphs → apples-to-apples).
+#     The cudagraph-profiling OOM that G16 hit was driven by Qwen3.6-27B's
+#     multimodal vision tower (~5-10 GB unquantized). G15.A doesn't have
+#     that — predicted GPU budget is ~31.5 GB, fits cudagraph capture
+#     headroom. Use VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS=0 to skip
+#     profiler over-reservation (h16-reasoning pattern).
+#     If empirically OOMs, fall back to --enforce-eager.
+#
+# Memory budget @ 65k bf16:
+#   AWQ-4bit weights (on GPU, ~62% of total)   ~28 GB
+#   KV cache (bf16, hybrid 12/48 layers full)   ~2 GB
+#   workspace / activations                     ~1.5 GB
+#   profiler reserve (env disabled below)       ~0 GB
+#   total                                       ~31 GB    (vs 32.6 GB available)
+#   CPU-side spilled experts                    ~17 GB    (out of 128 GB DDR5)
+#
+# Why CPU pinning (per memory project_h21_cpu_thermals_2026_05_11):
+#   cpuset: "6-13" — pin to NUC 15 Pro+ E-cores. Same as h16-reasoning.
+#
+# Per-token TB4 traffic estimate:
+#   10 experts routed per token × ~~90 MB/expert (INT4) ≈ ~900 MB/token
+#   if all routed experts were on CPU. Hot-cache (top-N most-recently-
+#   routed experts on GPU) is the dominant lever.
+#   At ~80% hot-cache hit rate: ~180 MB/token over TB4 = ~65 ms/token
+#                              = ~15 tok/s expected
+#   At ~50% hot-cache hit rate: ~450 MB/token = ~160 ms/token
+#                              = ~6 tok/s
+#   Empirical measurement on bring-up will tell us where we land.
+#
+# Open questions this run answers (per design-space doc):
+#   Q1: Is --cpu-offload-gb the smart (expert-routed) or dumb (dense
+#       weight stream) variant? Decode rate is the tell — <1 tok/s
+#       means dumb; >5 tok/s means smart.
+#   Q2: Does TRITON_ATTN auto-select for this hybrid MoE? G16 didn't
+#       trigger it; verify for Coder-Next.
+#   Q3: Quality gate vs R11 (4/5 polyglot baseline) — does Coder-Next
+#       beat the model we already have?
+#
+# Test plan after /health=200:
+#   1. nvidia-smi: actual VRAM peak vs predicted ~31 GB
+#   2. curl /v1/chat/completions one-shot smoke test
+#   3. tools/polyglot-bench.sh 5 python (quality gate)
+#   4. If polyglot ≥ R11: file G15.B (cudagraphs restored); G15.E (96k);
+#      etc. per docs/qwen3-coder-next-config-space.md.
+#   5. If polyglot < R11 (and not noise-flippable to ≥): FALSIFIED;
+#      revert to production.
+
+services:
+  vllm:
+    cpuset: "6-13"
+    environment:
+      # h16-reasoning pattern: stop vLLM over-reserving the ~0.86 GB
+      # profiler-estimate for cudagraphs. The cudagraph capture itself
+      # still happens — we just skip the over-conservative pre-allocation.
+      VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS: "0"
+      PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
+      # Bypass prefetch backend's pinned-memory assertion. AWQ-INT4's
+      # auxiliary g_idx tensors fail to pin (vLLM bug; the prefetch
+      # offloader doesn't handle AWQ's group-index tensors correctly).
+      # With this disabled, copies fall back to synchronous-under-the-hood
+      # instead of async — loses some parallelism but unblocks the
+      # prefetch backend on AWQ models. Still expected to beat UVA on
+      # bandwidth utilization because chunk size is layer-group-sized
+      # not page-sized.
+      VLLM_WEIGHT_OFFLOADING_DISABLE_PIN_MEMORY: "1"
+    command:
+      - "--model=${VLLM_MODEL:-cyankiwi/Qwen3-Coder-Next-AWQ-4bit}"
+      - "--served-model-name=${VLLM_SERVED_NAME:-qwen3-coder-next}"
+      - "--max-model-len=65536"
+      - "--max-num-batched-tokens=8192"
+      - "--gpu-memory-utilization=0.92"
+      # G15.A-fallback applied 2026-05-13:
+      # Initial run (offload=17, cudagraphs ON) OOM'd at cudagraph
+      # profiling — Marlin MoE + UVA offload bookkeeping + GDN linear
+      # attention scratch ate more GPU than predicted. Process held
+      # 31.24 GB, needed 544 MiB more for cudagraph profiling, had 76 MiB.
+      # Fallback: bump offload to 20 GB AND skip cudagraph capture.
+      # Accepts ~20-30% decode-perf hit to land a runnable baseline;
+      # cudagraphs can be revisited later by trimming `cudagraph_capture_sizes`.
+      # Path B: prefetch backend with expert-only targeting.
+      # Path A (UVA + cpu_offload_params=experts) gave 1.19 tok/s —
+      # 6× better than default-UVA's 0.2 tok/s but still unusable.
+      # UVA's page-on-demand has per-page-fault overhead that dominates
+      # over TB4's bandwidth at this access pattern (~480 expert
+      # accesses per token, ~50% page faulting).
+      #
+      # Prefetch backend: groups layers, async-prefetches the next
+      # group's weights via CUDA streams while current group computes.
+      # offload_group_size=4, offload_num_in_group=2 offloads last 2
+      # of every 4 layers (= 24 of 48 layers' expert tensors → ~17 GB
+      # CPU-resident, close to our 20 GB target). prefetch_step=2 keeps
+      # 2 groups ahead loaded; uses ~1 GB GPU buffer for staging.
+      # offload_params=experts targets only MoE expert tensors —
+      # attention weights / norms / embeddings stay GPU-resident.
+      - "--offload-backend=prefetch"
+      - "--offload-group-size=4"
+      - "--offload-num-in-group=2"
+      - "--offload-prefetch-step=2"
+      - "--offload-params=experts"
+      - "--dtype=auto"
+      - "--enforce-eager"
+      - "--enable-auto-tool-choice"
+      - "--tool-call-parser=${VLLM_TOOL_PARSER:-qwen3_coder}"
