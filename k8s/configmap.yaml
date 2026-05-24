@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vllm-config
+  namespace: vllm
+data:
+  # Model identity. Override per-deployment; current production pick is the
+  # R11-validated 30B-A3B-AWQ dense Qwen3-Coder.
+  VLLM_MODEL: "cyankiwi/Qwen3-Coder-30B-A3B-Instruct-AWQ-4bit"
+  VLLM_SERVED_NAME: "qwen3-coder-30b-a3b"
+  VLLM_TOOL_PARSER: "qwen3_coder"
+
+  # Engine args validated R11 (2026-05-10) on AORUS 5090 + NUC 15 Pro+.
+  # See docs/model-config-matrix.md for the per-flag rationale.
+  VLLM_MAX_MODEL_LEN: "98304"
+  VLLM_MAX_BATCHED_TOKENS: "8192"
+  VLLM_GPU_MEM_UTIL: "0.92"

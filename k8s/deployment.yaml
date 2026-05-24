@@ -1,0 +1,134 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vllm
+  namespace: vllm
+  labels:
+    app: vllm
+    app.kubernetes.io/name: vllm
+    app.kubernetes.io/component: inference
+    app.kubernetes.io/version: "0.20.2"
+spec:
+  replicas: 1
+  strategy:
+    # Single GPU; can't run old + new pod side-by-side during rolling update.
+    type: Recreate
+  selector:
+    matchLabels:
+      app: vllm
+  template:
+    metadata:
+      labels:
+        app: vllm
+        app.kubernetes.io/name: vllm
+        app.kubernetes.io/component: inference
+        app.kubernetes.io/version: "0.20.2"
+    spec:
+      # Consumer-contract gates from the nvidia-driver-injector producer.
+      # See: github.com/apnex/nvidia-driver-injector/docs/consumer-contract.md
+      nodeSelector:
+        nvidia.driver/state: ready
+      runtimeClassName: nvidia
+      restartPolicy: Always
+      containers:
+        - name: vllm
+          image: vllm/vllm-openai:v0.20.2
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          env:
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: "all"
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: "compute,utility"
+            - name: HF_HUB_ENABLE_HF_TRANSFER
+              value: "1"
+            - name: HF_HOME
+              value: /root/.cache/huggingface
+            - name: VLLM_MODEL
+              valueFrom:
+                configMapKeyRef:
+                  name: vllm-config
+                  key: VLLM_MODEL
+            - name: VLLM_SERVED_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: vllm-config
+                  key: VLLM_SERVED_NAME
+            - name: VLLM_TOOL_PARSER
+              valueFrom:
+                configMapKeyRef:
+                  name: vllm-config
+                  key: VLLM_TOOL_PARSER
+            - name: VLLM_MAX_MODEL_LEN
+              valueFrom:
+                configMapKeyRef:
+                  name: vllm-config
+                  key: VLLM_MAX_MODEL_LEN
+            - name: VLLM_MAX_BATCHED_TOKENS
+              valueFrom:
+                configMapKeyRef:
+                  name: vllm-config
+                  key: VLLM_MAX_BATCHED_TOKENS
+            - name: VLLM_GPU_MEM_UTIL
+              valueFrom:
+                configMapKeyRef:
+                  name: vllm-config
+                  key: VLLM_GPU_MEM_UTIL
+          args:
+            - "--model=$(VLLM_MODEL)"
+            - "--served-model-name=$(VLLM_SERVED_NAME)"
+            - "--max-model-len=$(VLLM_MAX_MODEL_LEN)"
+            - "--max-num-batched-tokens=$(VLLM_MAX_BATCHED_TOKENS)"
+            - "--gpu-memory-utilization=$(VLLM_GPU_MEM_UTIL)"
+            - "--dtype=auto"
+            - "--enable-auto-tool-choice"
+            - "--tool-call-parser=$(VLLM_TOOL_PARSER)"
+          volumeMounts:
+            - name: hf-cache
+              mountPath: /root/.cache/huggingface
+            - name: vllm-cache
+              mountPath: /root/.cache/vllm
+            - name: dshm
+              mountPath: /dev/shm
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            # 180 * 10s = 1800s window for cold load (HF download + torch.compile + CUDA graphs).
+            failureThreshold: 180
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+      volumes:
+        # Persist HF weights across pod recreates. ~17 GB for the 30B-A3B-AWQ.
+        - name: hf-cache
+          hostPath:
+            path: /root/.cache/huggingface
+            type: DirectoryOrCreate
+        # vLLM torch.compile cache. Saves ~30s on subsequent starts.
+        - name: vllm-cache
+          hostPath:
+            path: /root/.cache/vllm
+            type: DirectoryOrCreate
+        # Shared memory for torch tensors. vLLM official guidance ≥16 GiB.
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 16Gi
