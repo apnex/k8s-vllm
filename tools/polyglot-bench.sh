@@ -80,7 +80,8 @@ esac
 # ============================================================================
 ts=$(date -u +%Y%m%dT%H%M%SZ)
 model_safe=$(echo "$MODEL_ID" | tr '/:' '__')
-archive_dir="/root/vllm/archive/polyglot-${ts}-${model_safe}-${LANG_NAME}"
+REPO_ROOT="${REPO_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
+archive_dir="$REPO_ROOT/archive/polyglot-${ts}-${model_safe}-${LANG_NAME}"
 mkdir -p "$archive_dir"
 
 {
@@ -95,7 +96,7 @@ mkdir -p "$archive_dir"
     docker ps --filter name=aorus-vllm --format '  {{.Image}} {{.Status}}' || echo "  not found"
 } > "$archive_dir/env.txt"
 
-(cd /root/vllm && docker compose config) > "$archive_dir/compose-config.yml" 2>&1 || true
+(cd "$REPO_ROOT" && docker compose config) > "$archive_dir/compose-config.yml" 2>&1 || true
 
 results_jsonl="$archive_dir/results.jsonl"
 : > "$results_jsonl"

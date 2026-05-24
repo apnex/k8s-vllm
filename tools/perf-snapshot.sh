@@ -57,7 +57,8 @@ fi
 MODEL=$(curl -fsS "$VLLM_ENDPOINT/v1/models" | python3 -c 'import json,sys; print(json.load(sys.stdin)["data"][0]["id"])')
 TS=$(date -u +%Y%m%dT%H%M%SZ)
 MODEL_SAFE=$(echo "$MODEL" | tr '/:' '__')
-ARCHIVE_DIR="/root/vllm/archive/perf-${TS}-${MODEL_SAFE}-${LABEL}"
+REPO_ROOT="${REPO_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
+ARCHIVE_DIR="$REPO_ROOT/archive/perf-${TS}-${MODEL_SAFE}-${LABEL}"
 mkdir -p "$ARCHIVE_DIR"
 
 green "perf-snapshot starting"
