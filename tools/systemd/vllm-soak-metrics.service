@@ -1,0 +1,7 @@
+[Unit]
+Description=vLLM soak — /metrics scrape (single shot)
+Documentation=https://github.com/apnex/k8s-vllm/blob/main/docs/soak-monitoring.md
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/vllm-soak-metrics.sh

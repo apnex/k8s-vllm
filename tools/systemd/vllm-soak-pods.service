@@ -1,0 +1,7 @@
+[Unit]
+Description=vLLM soak — daily pod snapshot
+Documentation=https://github.com/apnex/k8s-vllm/blob/main/docs/soak-monitoring.md
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/vllm-soak-pods.sh

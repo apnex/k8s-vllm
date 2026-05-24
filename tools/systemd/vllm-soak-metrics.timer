@@ -1,0 +1,14 @@
+[Unit]
+Description=vLLM soak — /metrics scrape every 30s
+Documentation=https://github.com/apnex/k8s-vllm/blob/main/docs/soak-monitoring.md
+
+[Timer]
+OnBootSec=60
+OnUnitActiveSec=30
+AccuracySec=1s
+RandomizedDelaySec=2
+Persistent=false
+Unit=vllm-soak-metrics.service
+
+[Install]
+WantedBy=timers.target

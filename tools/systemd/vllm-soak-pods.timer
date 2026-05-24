@@ -1,0 +1,13 @@
+[Unit]
+Description=vLLM soak — daily pod snapshot (00:30 UTC)
+Documentation=https://github.com/apnex/k8s-vllm/blob/main/docs/soak-monitoring.md
+
+[Timer]
+OnCalendar=*-*-* 00:30:00 UTC
+AccuracySec=1min
+RandomizedDelaySec=5min
+Persistent=true
+Unit=vllm-soak-pods.service
+
+[Install]
+WantedBy=timers.target
