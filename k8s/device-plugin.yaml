@@ -1,0 +1,93 @@
+# NVIDIA k8s-device-plugin v0.17.4 — advertises nvidia.com/gpu as a
+# kubelet resource so workloads can schedule via resources.limits.
+# Eliminates the D-1 stale-label gap by design: when NVML returns
+# 0 GPUs, plugin advertises 0, scheduler stops scheduling.
+#
+# Patched from upstream
+# https://github.com/NVIDIA/k8s-device-plugin/blob/v0.17.4/deployments/static/nvidia-device-plugin.yml
+# with:
+#   - runtimeClassName: nvidia (our runtime contract)
+#   - NVIDIA_VISIBLE_DEVICES=all + NVIDIA_DRIVER_CAPABILITIES env
+#   - initContainer that waits for the injector's PC-3 ready signal
+#     before starting NVML probe (avoids 'No devices found' crashloop)
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nvidia-device-plugin-daemonset
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: nvidia-device-plugin
+    app.kubernetes.io/version: "0.17.4"
+spec:
+  selector:
+    matchLabels:
+      name: nvidia-device-plugin-ds
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name: nvidia-device-plugin-ds
+    spec:
+      priorityClassName: system-node-critical
+      runtimeClassName: nvidia
+      tolerations:
+        - key: nvidia.com/gpu
+          operator: Exists
+          effect: NoSchedule
+        - key: CriticalAddonsOnly
+          operator: Exists
+      initContainers:
+        # Gate startup on the injector's PC-3 readiness file. Without this,
+        # the plugin can race ahead of the injector and fail NVML probe with
+        # 'No devices found. Waiting indefinitely.'
+        - name: wait-for-driver
+          image: alpine:3.20
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+              STATE=/run/nvidia/injector/state
+              echo "wait-for-driver: polling for $STATE phase=ready (timeout 600s)"
+              t=0
+              while [ "$t" -lt 600 ]; do
+                if [ -f "$STATE" ] && grep -q '"phase":"ready"' "$STATE" 2>/dev/null; then
+                  echo "wait-for-driver: PC-3 ready — proceeding"
+                  exit 0
+                fi
+                sleep 2
+                t=$((t + 2))
+              done
+              echo "wait-for-driver: TIMEOUT — PC-3 never reached ready in 600s" >&2
+              exit 1
+          volumeMounts:
+            - name: pc3-state
+              mountPath: /run/nvidia/injector
+              readOnly: true
+      containers:
+        - name: nvidia-device-plugin-ctr
+          image: nvcr.io/nvidia/k8s-device-plugin:v0.17.4
+          env:
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: "all"
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: "compute,utility"
+            - name: FAIL_ON_INIT_ERROR
+              value: "false"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: device-plugin
+              mountPath: /var/lib/kubelet/device-plugins
+      volumes:
+        - name: device-plugin
+          hostPath:
+            path: /var/lib/kubelet/device-plugins
+        - name: pc3-state
+          hostPath:
+            path: /run/nvidia/injector
+            type: DirectoryOrCreate
