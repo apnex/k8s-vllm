@@ -8,7 +8,13 @@ Last refresh: 2026-05-25.
 ## Mission
 
 Operate a production-grade vLLM OpenAI-compatible inference server on an AORUS RTX 5090 eGPU over Thunderbolt 4 attached to a NUC 15 Pro+ host, deployed via k3s as a consumer of the [`apnex/nvidia-driver-injector`](https://github.com/apnex/nvidia-driver-injector) producer.\
-Equal-weight goals: **reliability** (no hard locks, surprise removal handled, recovery autonomous) and **performance** (parity with closed-driver / WSL2 baselines on coding workloads).
+Three equal-weight goals: **reliability** (no hard locks, surprise removal handled, recovery autonomous), **performance** (parity with closed-driver / WSL2 baselines on coding workloads), and **runtime eGPU lifecycle** (hot-plug + hot-power without host reboot).
+
+### Standing project missions
+
+| Mission | Status | Detailed plan |
+|---|---|---|
+| **MISSION-1** — TB eGPU runtime hot-plug + hot-power | ACTIVE (declared 2026-05-25) | [`docs/mission-egpu-hot-plug-hot-power.md`](./mission-egpu-hot-plug-hot-power.md) |
 
 ---
 
@@ -51,7 +57,7 @@ Grouped by status. Numbered IDs match cross-references in commit messages and ot
 |---|---|---|---|---|
 | **D-1** | Stale `nvidia.driver/state=ready` node label during driver-absent window | medium | open, design TBD | gated on M2 (mirror NVIDIA's label/taint conventions) |
 | **D-2** | Injector enters liveness-probe-driven crashloop instead of documented clean-exit-wait pattern under k3s | medium | open, design TBD | gated on M2 |
-| **D-3** | PCIe tunnel does not autonomously recover from chassis power-cycle; requires reboot with cable in place | high | open, design TBD | gated on M1 (research informs Option B vs Option E vs "document as known limit") |
+| **D-3** | PCIe tunnel does not autonomously recover from chassis power-cycle; requires reboot with cable in place | high | **elevated to MISSION-1** — tracked at `docs/mission-egpu-hot-plug-hot-power.md` | M1 research completed (`audit/tb-pcie/CONSOLIDATED.md`); empirical test E1 (cable replug) queued before further phases |
 | **D-4** | Injector failure modes are buried in logs (BAR1=256MB error took 10+ min to surface during 2026-05-25 test) | low-medium | open, design TBD | gated on M2 |
 
 ### Deferred (post-audit)
