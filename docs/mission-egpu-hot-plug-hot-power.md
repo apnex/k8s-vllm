@@ -9,7 +9,11 @@
 
 ## Mission statement
 
-Achieve reliable runtime hot-plug AND hot-power capability for TB-attached eGPUs on Linux **without requiring host reboot**, on code we can read and control.
+Achieve reliable runtime eGPU lifecycle on Linux for TB-attached devices, **without requiring host reboot**, on code we can read and control. Three distinct axes:
+
+1. **Hot-plug** (deliberate cable insert / remove with chassis powered)
+2. **Hot-power** (deliberate chassis power-cycle with cable untouched)
+3. **Unexpected disconnect** (cable yanked, chassis loses power, electrical fault, EM interference) DURING active GPU workload — must not crash host
 
 This is elevated to **first-class project mission** alongside reliability and performance — comparable in weight to "no hard locks, no surprise-removal cascades, recovery autonomous." It is a standing engineering goal, not a hardening sprint.
 
@@ -37,13 +41,13 @@ If a hypothesis points to chassis firmware as the root cause, we **note it but d
 
 ---
 
-## Two sub-missions (distinct tractability)
+## Three sub-missions (distinct tractability)
 
 ### Sub-mission A — Hot-PLUG (cable physically inserted while host is up)
 
 **Mechanism today:** USB-C connector's CC1/CC2 lines transition on physical cable insert → host TB controller fires fresh enumeration → bridge windows sized based on what device announces → BAR1 reaches 32GB → PCIe tunnel established cleanly.
 
-**Status:** *probably works* on our hardware via the well-trodden cable-insert code path, but **NOT YET EMPIRICALLY VERIFIED on this rig**. Confirmation test is cheap (cable unplug + 5s + replug).
+**Status:** *probably works* on our hardware on an IDLE GPU. Today's attempted test was confounded by active workload triggering axis C failure — see Sub-mission C and H7 / E7 below. Confirmation test with drain-first protocol is queued (E7).
 
 **Tractability:** weeks. Primarily an injector hardening problem — Option B watcher detects + responds to the existing hotplug events; doesn't require kernel work.
 
@@ -56,6 +60,20 @@ If a hypothesis points to chassis firmware as the root cause, we **note it but d
 **Tractability:** multi-month. Requires either:
 - A software-only signal that triggers the same bridge-enumeration path that CC events trigger (unknown if exists; Phase 2 investigation), OR
 - An upstream Linux kernel patch series adding runtime bridge-window regrow for populated bridges (Phase 3, multi-quarter)
+
+### Sub-mission C — Unexpected disconnect resilience (during active workload)
+
+**Scope:** the GPU vanishes without warning while compute is running. Could be: physical cable yank, chassis loses AC power, an electrical fault, EM interference, an aggressive TB power-management decision elsewhere on the bus.
+
+**Mechanism today:** project's existing P3 Q-watchdog + M-recover stack (patches 0024-0028) handles PCIe transients reasonably well — that's why we survive most TB jitter without intervention. But the **truly instant disconnect during active CUDA compute** can produce NVRM **Xid 154 ("GPU recovery action changed from 0x0 (None) to 0x2 (Node Reboot Required)")** before any of our recovery layers can intercept. Once Xid 154 fires, the NVIDIA driver itself declares the node unrecoverable; kernel watchdog reboots the host shortly after.
+
+**Status:** **partially handled but not fully resilient.** Project's existing infrastructure (P3, M-recover, close-path mitigation) addresses the PCIe-layer wedge cases. The Xid 154 path under "surprise removal + active compute" is a documented gap as of 2026-05-25.
+
+**Tractability:** weeks-to-months. Possible mitigation axes:
+- **Workload-side awareness**: vLLM (or a sidecar) listens for early-warning signals (PCIe AER cor/uncor events, TB link-state events) and drains in-flight requests BEFORE the kernel declares unrecoverable
+- **Driver-side**: NVIDIA driver patch to recover from Xid 154 without node reboot (probably blocked at NVIDIA design boundary — Xid 154 = unrecoverable BY DEFINITION per their docs)
+- **Application-side**: vLLM's CUDA streams committed to suitable error-handling that doesn't require host reboot when CUDA returns ERROR_NO_DEVICE or similar
+- **Composite**: detect "imminent disconnect" early enough to suspend compute, then handle the actual disconnect from a quiescent state
 
 ---
 
@@ -98,12 +116,35 @@ Numbered for cross-reference in commits and future tests. Each hypothesis has a 
 **Status:** CONFIRMED by M1 (source comment in `__assign_resources_sorted` is explicit; Miroshnichenko "movable BARs" series proposed an API but stalled in 2020).\
 **Why it matters:** this is the structural constraint that makes hot-POWER hard. Without a kernel API to grow windows, we cannot fix this purely in userspace.
 
-### H6 — A software-only trigger for bridge re-enumeration exists that we haven't found
+### H7 — NVRM Xid 154 fires under surprise removal during active CUDA compute (CONFIRMED 2026-05-25)
+
+**Prediction:** Cable unplug (or equivalent fast electrical disconnect) while vLLM is actively serving compute produces NVRM Xid 154 BEFORE the project's P3/M-recover stack can intercept. Driver flags "Node Reboot Required"; kernel watchdog reboots host within 1-2 minutes.\
+**Falsification gate:** observe a cable-unplug-during-active-compute event that does NOT produce Xid 154 on this hardware + driver version.\
+**Status:** **CONFIRMED** by today's accidental experiment — vLLM was actively serving Qwen3-Coder when cable was replugged for test E1; Xid 154 fired at 14:03:51 (before the replug visible in journal at 14:04:46); 663,842 kernel messages lost to rate limiting; host rebooted at 14:06:53.\
+**Why it matters:** sets a hard methodology constraint — hot-plug stress testing requires drain-first protocol. Also defines the lower bound on Sub-mission C: the existing stack is NOT resilient to electrical-instant disconnect + active compute combination.
+
+### H8 — P3/M-recover stack handles PCIe transients but NOT instant electrical disconnect during compute
+
+**Prediction:** The existing project recovery patches (P3 Q-watchdog, M-recover, close-path mitigation) successfully intercept gradual PCIe failure modes (AER cor/uncor cascades, link retraining glitches) — that's why we survive most TB jitter without intervention. But they do NOT intercept FAST disconnects (cable yank, chassis power loss) before NVRM driver declares Xid 154.\
+**Falsification gate:** observe a fast electrical disconnect that the existing stack DOES handle cleanly.\
+**Status:** PARTIALLY CONFIRMED — multiple past sessions show P3/M-recover handling transients successfully (recorded in project memory); today shows the fast-disconnect-during-compute case is NOT handled.\
+**Why it matters:** identifies where in the failure-mode spectrum the new work is needed.
+
+### H9 — A workload-side early-warning signal exists that could enable graceful drain before Xid 154 fires
+
+**Prediction:** Between the first PCIe error event and the eventual Xid 154 declaration, there is a window (milliseconds to seconds) where vLLM (or a sidecar) could detect impending disconnect and gracefully drain in-flight CUDA work. Possible signals: AER cor/uncor events on the TB bridge, TB link-state transitions visible via netlink, sudden GPU bandwidth collapse.\
+**Falsification gate:** instrument all plausible signals during a controlled fast-disconnect test; if NO signal fires before Xid 154, hypothesis falsified.\
+**Status:** OPEN — needs E9 (controlled disconnect with full signal instrumentation).\
+**Why it matters:** if H9 confirms, Sub-mission C is tractable in workload-side / sidecar code; if falsified, the only path is driver-side or kernel-side intervention.
+
+### H10 — A software-only trigger for bridge re-enumeration exists that we haven't found
 
 **Prediction:** Among the many sysfs / ioctl / netlink APIs touching PCIe + TB, at least one of them can trigger the same "do full bridge enumeration" code path that USB-C CC events trigger — we just haven't found it yet.\
 **Falsification gate:** exhaustively enumerate all sysfs paths under `/sys/bus/pci/` and `/sys/bus/thunderbolt/`, all ioctls in `<linux/pci.h>`, all kernel debugfs entries; test each that plausibly could trigger; document each as "doesn't trigger" or "does trigger" with evidence.\
 **Status:** OPEN — Phase 2 investigation. We have tried: `boltctl authorize`, `boltctl forget+enroll`, sysfs `authorized=0/1` toggle, `resource1_resize`, PCI `remove`+`rescan` at three different bridge levels. None worked. There are more paths we haven't tried.\
-**Why it matters:** if H6 holds, the mission collapses to "find the right sysfs write" + Option B watcher. Phase 3 (upstream patches) becomes unnecessary.
+**Why it matters:** if H10 holds, the mission collapses to "find the right sysfs write" + Option B watcher. Phase 3 (upstream patches) becomes unnecessary.
+
+(Hypothesis numbering: H1-H5 are pre-existing; H7-H9 were added 2026-05-25 to capture Sub-mission C; H10 was renumbered from earlier H6 to avoid collision.)
 
 ---
 
@@ -117,9 +158,15 @@ Each phase has explicit entry / exit criteria so we know when to stop pursuing o
 
 **Work:**
 
-1. Empirical: cable-replug test on our rig. Validates H1.
-2. If H1 confirmed: build Option B watcher in the injector — detects "TB connected + sysfs authorized=0" pattern, calls `boltctl authorize` automatically. Also detects "TB connected + auth=1 + no PCI device" and triggers any remaining sysfs prods we identify in Phase 2.
-3. If H1 falsified: scope-expand to Phase 2 immediately; document the surprise.
+1. **Drain-first protocol** (REQUIRED before any cable-disconnect test on this rig — per H7):
+   ```bash
+   kubectl scale -n vllm deployment/vllm --replicas=0
+   kubectl wait -n vllm --for=delete pod -l app=vllm --timeout=120s
+   nvidia-smi --query-compute-apps=pid,name --format=csv,noheader  # verify empty
+   ```
+2. Empirical: cable-replug test with drained workload (E7). Validates H1.
+3. If H1 confirmed: build Option B watcher in the injector — detects "TB connected + sysfs authorized=0" pattern, calls `boltctl authorize` automatically. Also detects "TB connected + auth=1 + no PCI device" and triggers any remaining sysfs prods we identify in Phase 2.
+4. If H1 falsified: scope-expand to Phase 2 immediately; document the surprise.
 
 **Exit criteria:** hot-PLUG works autonomously on our rig (no manual operator action when cable is replugged on powered chassis), OR documented as falsified and escalated.
 
@@ -143,6 +190,23 @@ Each phase has explicit entry / exit criteria so we know when to stop pursuing o
 - (a) we find a working software-only trigger → integrate into Option B watcher, sub-mission B closed
 - (b) we exhaustively prove no software-only trigger exists in current kernel → escalate to Phase 3
 - (c) we hit a partial success (e.g., works on some kernel versions but not ours) → narrow scope and escalate to Phase 3
+
+### Phase C — Unexpected disconnect resilience (weeks-to-months, parallel to Phases 1-3)
+
+**Goal:** address Sub-mission C. Make active-compute survive fast electrical disconnect without host reboot.
+
+**Work:**
+
+1. **Characterize the failure** — when exactly does Xid 154 fire vs when does the P3/M-recover stack handle it cleanly? E8 (cable yank on IDLE GPU) is the control experiment. E9 (instrumented controlled disconnect during compute) is the data point.
+2. **Signal hunt** — investigate H9. What early-warning signals fire BEFORE Xid 154? Plausible candidates:
+   - PCIe AER cor/uncor events (already visible in dmesg, but not currently consumed by vLLM)
+   - TB link-state transitions via `/sys/bus/thunderbolt/` netlink or polling
+   - Sudden bandwidth collapse on `nvbandwidth` periodic probe
+   - GPU memory ECC counters (less likely but worth checking)
+3. **Drain-on-signal**: if H9 confirms an early signal, build the workload-side drain hook. vLLM sidecar / liveness sidecar that listens for signal, posts a "drain" event, vLLM's request scheduler suspends new admissions and cancels in-flight CUDA streams.
+4. **Driver-side investigation**: read NVIDIA open-driver source paths that fire Xid 154. Are there cases where the driver could recover internally? (Probably no per Xid 154 definition, but worth confirming.)
+
+**Exit criteria:** an unexpected disconnect during active compute on our rig results in vLLM error response to in-flight requests + clean GPU re-bind on reconnect, WITHOUT host reboot.
 
 ### Phase 3 — Upstream kernel work (6-12 months)
 
@@ -175,12 +239,15 @@ If at any point we identify the chassis firmware as the root cause (per H4):
 
 | # | Experiment | Validates / falsifies | Cost | Priority |
 |---|---|---|---|---|
-| **E1** | Cable replug on powered chassis (NUC-side unplug, 5s wait, replug) | H1 | 2 min | **HIGH — do first** |
-| **E2** | `echo 0 > /sys/bus/pci/slots/<N>/power; echo 1 > /sys/bus/pci/slots/<N>/power` | H6 (pcihp slot power cycle path) | 5 min | HIGH |
-| **E3** | Cycle through every writable sysfs file under `/sys/bus/pci/devices/0000:0X:00.0/` | H6 (sysfs surface) | 30 min | MEDIUM (Phase 2 scope) |
-| **E4** | `udevadm trigger` with various subsystem filters | H6 (udev re-trigger path) | 15 min | MEDIUM |
-| **E5** | Force `setpci` rewrite of bridge BAR registers + rescan | H6 (manual register manipulation) | 30 min | LOW (high risk, lowest expected yield) |
+| **E1** | Cable replug on powered chassis (NUC-side unplug, 5s wait, replug) — **WITH ACTIVE WORKLOAD** | H1, H7 | 2 min | **DEPRECATED — see E7** |
+| **E2** | `echo 0 > /sys/bus/pci/slots/<N>/power; echo 1 > /sys/bus/pci/slots/<N>/power` | H10 (pcihp slot power cycle path) | 5 min | HIGH |
+| **E3** | Cycle through every writable sysfs file under `/sys/bus/pci/devices/0000:0X:00.0/` | H10 (sysfs surface) | 30 min | MEDIUM (Phase 2 scope) |
+| **E4** | `udevadm trigger` with various subsystem filters | H10 (udev re-trigger path) | 15 min | MEDIUM |
+| **E5** | Force `setpci` rewrite of bridge BAR registers + rescan | H10 (manual register manipulation) | 30 min | LOW (high risk, lowest expected yield) |
 | **E6** | Test with a different TB chassis (e.g., Razer Core, OWC Helios) if available | H4 (chassis firmware vs Linux kernel as root cause) | hardware-dependent | LOW (informational only) |
+| **E7** | Cable replug WITH DRAIN-FIRST protocol (replaces E1) | H1 cleanly | 5 min | **HIGH — do first** |
+| **E8** | Cable yank on IDLE GPU (no workload) — control experiment | H7 (does surprise removal alone trigger Xid 154, or does compute participate?) | 5 min | HIGH (Sub-mission C entry point) |
+| **E9** | Controlled disconnect during compute, INSTRUMENTED for all early-warning signals (AER, TB link, bandwidth) | H9 | 1-2 hrs setup + execution | **HIGH (Sub-mission C critical path)** |
 
 ---
 

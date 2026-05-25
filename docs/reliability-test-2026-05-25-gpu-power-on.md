@@ -176,6 +176,30 @@ Each criterion produces a discrete PASS / FAIL / INCONCLUSIVE in the post-test a
 4. **No code changes to injector yet** — per user direction: "discuss hardening design before we commit to changes."
 5. **Documented operational discipline**: cable must be plugged in at boot. Will be added to injector README's Prerequisites.
 
+### Follow-up empirical finding — cable replug attempted later same day (2026-05-25 ~14:04 UTC)
+
+After the post-reboot system was stable, attempted E1 (cable replug on powered chassis) to validate H1. **vLLM was actively serving traffic at the time** — methodology oversight on my part (should have drained first).
+
+Sequence observed in journal:
+
+```
+14:03:51  NVRM: Xid (PCI:0000:04:00): 154, GPU recovery action changed
+          from 0x0 (None) to 0x2 (Node Reboot Required)
+14:04:45  user replugged cable
+14:04:46  thunderbolt activated paths; PCI did NOT enumerate (sysfs authorized=0)
+14:05:34  rsyslogd: 663,842 messages lost due to rate-limiting in 600s window
+14:06:53  host rebooted (kernel-driven, watchdog)
+```
+
+**Empirical findings:**
+
+1. **Xid 154 fired BEFORE the cable replug** (14:03:51 vs 14:04:45 user action). The cable yank + active compute triggered the unrecoverable state.
+2. **The project's P3/M-recover stack did NOT intercept** the failure cascade. Xid 154 is downstream of where our recovery layers operate.
+3. **Kernel watchdog rebooted the host** ~3 min after Xid 154 fired.
+4. **H1 (hot-plug works on cable replug) remains untested** because the system entered fatal state from the active-compute side before the cable-replug data point could be gathered.
+5. **NEW hypothesis surfaced (H7 in MISSION-1 doc)**: NVRM Xid 154 fires under surprise removal during active CUDA compute — CONFIRMED.
+6. **NEW hardening axis (Sub-mission C in MISSION-1 doc)**: unexpected disconnect resilience. The existing stack handles PCIe transients well but not instant electrical disconnect + active compute.
+
 ### Net outcome
 
 The test surfaced **4 hardening gaps**, **validated the user's intuition that "runtime hot-plug must work"** (the kernel TB code IS functioning correctly per design — but Linux's PCI bridge window allocation has a structural limitation), and produced **direct empirical confirmation that `boltctl authorize` at runtime triggers correct PCIe enumeration when bridge windows are adequately sized at boot**. The "cold-plug at boot" pattern remains the only reliable production path on this hardware until either upstream Linux patches land or our injector grows a TB-event-driven authorize watcher (Option B from the design discussion).
