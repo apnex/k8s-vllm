@@ -10,6 +10,8 @@
 #   - NVIDIA_VISIBLE_DEVICES=all + NVIDIA_DRIVER_CAPABILITIES env
 #   - initContainer that waits for the injector's PC-3 ready signal
 #     before starting NVML probe (avoids 'No devices found' crashloop)
+#   - FAIL_ON_INIT_ERROR=false so transient NVML hiccups don't
+#     permanently kill the plugin pod
 ---
 apiVersion: apps/v1
 kind: DaemonSet
@@ -43,7 +45,7 @@ spec:
         # the plugin can race ahead of the injector and fail NVML probe with
         # 'No devices found. Waiting indefinitely.'
         - name: wait-for-driver
-          image: alpine:3.20
+          image: alpine:3.20.3
           command:
             - /bin/sh
             - -c
@@ -84,9 +86,13 @@ spec:
             - name: device-plugin
               mountPath: /var/lib/kubelet/device-plugins
       volumes:
+        # kubelet's device-plugin gRPC socket directory — required by the
+        # device-plugin API for the plugin to register itself with kubelet.
         - name: device-plugin
           hostPath:
             path: /var/lib/kubelet/device-plugins
+        # PC-3 state file from the nvidia-driver-injector producer.
+        # See: apnex/nvidia-driver-injector/docs/consumer-contract.md
         - name: pc3-state
           hostPath:
             path: /run/nvidia/injector
