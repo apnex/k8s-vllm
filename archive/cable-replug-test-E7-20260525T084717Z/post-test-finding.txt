@@ -1,0 +1,45 @@
+=== POST-TEST FINDING captured 2026-05-25T08:53:40Z ===
+
+## H1 VERDICT: FALSIFIED
+
+Cable replug at NUC side (drain-first, healthy 32GB baseline) produced BAR1=256MB after re-authorize.
+
+--- TB state ---
+   |- status:        authorized
+   |- authorized:    Mon 25 May 2026 08:52:42 AM UTC
+   |- connected:     Mon 25 May 2026 08:48:50 AM UTC
+
+--- PCI enumerated devices ---
+04:00.0 VGA compatible controller [0300]: NVIDIA Corporation GB202 [GeForce RTX 5090] [10de:2b85] (rev a1)
+04:00.1 Audio device [0403]: NVIDIA Corporation GB202 High Definition Audio Controller [10de:22e8] (rev a1)
+
+--- BAR1 (was 32GB at baseline; now ???) ---
+	Memory at 80000000 (32-bit, non-prefetchable) [size=64M]
+	Memory at 4000000000 (64-bit, prefetchable) [size=256M]
+	Memory at 4010000000 (64-bit, prefetchable) [size=32M]
+
+--- Bridge 03:00.0 window (was 33089M at baseline; now ???) ---
+	Memory behind bridge: 80000000-840fffff [size=65M] [32-bit]
+	Prefetchable memory behind bridge: 4000000000-4011ffffff [size=288M] [32-bit]
+
+--- Resizable BAR capability (still supports up to 32G) ---
+	Capabilities: [134 v1] Physical Resizable BAR
+		BAR 1: current size: 256MB, supported: 64MB 128MB 256MB 512MB 1GB 2GB 4GB 8GB 16GB 32GB
+	Capabilities: [140 v1] Virtual Resizable BAR
+		BAR 2: current size: 256MB, supported: 64MB 128MB 256MB 512MB 1GB 2GB 4GB 8GB 16GB 32GB 256TB 512TB 1PB 2PB 4PB 8PB 16PB 32PB 64PB 128PB 256PB 512PB 1EB 2EB 4EB 8EB
+
+--- Kernel events during the test (575 lines) ---
+Distinct timestamps:
+AER HdrLog=00000000_00000000_00000000_00000000 
+Bridge(0000:03:00.0) LnkSta=0x0000 DevSta=0x0000
+GPU(0000:04:00.0) LnkSta=0xffff DevSta=0xffff
+May 25 18:47:17
+May 25 18:47:31
+May 25 18:47:32
+May 25 18:48:34
+May 25 18:48:50
+May 25 18:48:51
+May 25 18:52:42
+NVRM: nvidia-bug-report.sh as
+NVRM: the NVIDIA
+Root(0000:00:07.0) LnkSta=0x1041 DevSta=0x0010

@@ -1,0 +1,25 @@
+=== PRE-TEST baseline 2026-05-25T08:47:17Z ===
+--- TB ---
+   |- status:        authorized
+   |- authorized:    Mon 25 May 2026 02:06:55 PM UTC
+--- sysfs authorized ---
+1
+--- PCI nvidia ---
+04:00.0 VGA compatible controller [0300]: NVIDIA Corporation GB202 [GeForce RTX 5090] [10de:2b85] (rev a1)
+04:00.1 Audio device [0403]: NVIDIA Corporation GB202 High Definition Audio Controller [10de:22e8] (rev a1)
+--- BAR1 (must be 32GB at baseline) ---
+	Memory at 80000000 (32-bit, non-prefetchable) [size=64M]
+	Memory at 4000000000 (64-bit, prefetchable) [size=32G]
+	Memory at 4810000000 (64-bit, prefetchable) [size=32M]
+--- bridge window 03:00.0 ---
+	Memory behind bridge: 80000000-840fffff [size=65M] [32-bit]
+	Prefetchable memory behind bridge: 4000000000-48140fffff [size=33089M] [32-bit]
+--- driver ---
+595.71.05-aorus.14
+--- nvidia-smi ---
+NVIDIA GeForce RTX 5090, 0 %, 30315 MiB, 32, 20.47 W
+--- pods (pre-drain) ---
+NAMESPACE        NAME                                                READY   STATUS    RESTARTS        AGE
+kube-system      nvidia-device-plugin-daemonset-szwbn                1/1     Running   0               52m
+kube-system      nvidia-driver-injector-t4bhk                        1/1     Running   0               55m
+vllm             vllm-bcd67b9bc-xmws7                                1/1     Running   0               51m

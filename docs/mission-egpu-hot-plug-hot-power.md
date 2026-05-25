@@ -85,7 +85,7 @@ Numbered for cross-reference in commits and future tests. Each hypothesis has a 
 
 **Prediction:** Cable replug on the powered-on chassis triggers full PCIe enumeration with BAR1 = 32GB and bridge window 03:00.0 ≥ 32GB, identical to the cold-boot path.\
 **Falsification gate:** cable replug test produces BAR1 < 32GB OR enumeration fails entirely.\
-**Status:** UNTESTED on this rig. Empirical test pending.\
+**Status:** **FALSIFIED 2026-05-25 ~08:53Z** (E7 drain-first test). Cable replug at NUC side, with vLLM properly drained, on a baseline of bridge window 33089M / BAR1=32GB, produced bridge window 288M / BAR1=256M after manual `boltctl authorize`. Boltd did NOT auto-authorize on cable replug either (~5 min wait); same Q1 boltd-handle_udev_device_attached gap as morning test. Recovery required host reboot. See `archive/cable-replug-test-E7-20260525T084717Z/`.\
 **Why it matters:** if FALSIFIED, sub-mission A becomes much harder than expected.
 
 ### H2 — Hot-POWER fails specifically because no CC event fires

@@ -1,0 +1,576 @@
+May 25 18:47:17 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=28
+May 25 18:47:17 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=28
+May 25 18:47:17 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=27
+May 25 18:47:17 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=27
+May 25 18:47:17 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=27
+May 25 18:47:17 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=26
+May 25 18:47:17 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=26
+May 25 18:47:17 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=26
+May 25 18:47:17 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=25
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=25
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=25
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=24
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=24
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=24
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=23
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=23
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=23
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=22
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=22
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=22
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=21
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=21
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=21
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=20
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=20
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=20
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=19
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=19
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=19
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=18
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=18
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=18
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=17
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=17
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=17
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=16
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=16
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=16
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=15
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=15
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=15
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=14
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=14
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=14
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=13
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=13
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=13
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=12
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=12
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=12
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=11
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=11
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=11
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=10
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=10
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=10
+May 25 18:47:31 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=9
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=8
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=8
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=7
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=7
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=7
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=6
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=6
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=6
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=5
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=5
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=5
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=4
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=7
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=7
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=6
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=6
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=6
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=5
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=5
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=5
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=4
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=7
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=7
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=6
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=6
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=6
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=5
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-entry     usage_count=5
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=pre-stop        usage_count=5
+May 25 18:47:32 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu [CLOSE]: site=close-exit      usage_count=4
+May 25 18:48:34 obpc kernel: thunderbolt:tb_cfg_ack_plug:851: thunderbolt 0000:00:0d.2: acking hot unplug event on 0:1
+May 25 18:48:34 obpc kernel: thunderbolt 0-0:1.1: retimer disconnected
+May 25 18:48:34 obpc kernel: thunderbolt:tb_handle_hotplug:2462: thunderbolt 0000:00:0d.2: 0:1: switch unplugged
+May 25 18:48:34 obpc kernel: thunderbolt:tb_tunnel_deactivate:2433: thunderbolt 0000:00:0d.2: 0:8 <-> 1:9 (PCI): deactivating
+May 25 18:48:34 obpc kernel: thunderbolt:tb_path_deactivate:485: thunderbolt 0000:00:0d.2: deactivating PCIe Down path from 1:9 to 0:8
+May 25 18:48:34 obpc kernel: thunderbolt:tb_path_deactivate:485: thunderbolt 0000:00:0d.2: deactivating PCIe Up path from 0:8 to 1:9
+May 25 18:48:34 obpc kernel: thunderbolt:tb_tunnel_deactivate:2433: thunderbolt 0000:00:0d.2: 0:12 <-> 1:20 (USB3): deactivating
+May 25 18:48:34 obpc kernel: thunderbolt:tb_path_deactivate:485: thunderbolt 0000:00:0d.2: deactivating USB3 Down path from 0:12 to 1:20
+May 25 18:48:34 obpc kernel: thunderbolt:tb_path_deactivate:485: thunderbolt 0000:00:0d.2: deactivating USB3 Up path from 1:20 to 0:12
+May 25 18:48:34 obpc kernel: thunderbolt 0-1: device disconnected
+May 25 18:48:34 obpc kernel: thunderbolt:tb_recalc_estimated_bandwidth:1520: thunderbolt 0000:00:0d.2: bandwidth consumption changed, re-calculating estimated bandwidth
+May 25 18:48:34 obpc kernel: thunderbolt:tb_recalc_estimated_bandwidth:1529: thunderbolt 0000:00:0d.2: bandwidth re-calculation done
+May 25 18:48:34 obpc kernel: thunderbolt:tb_tunnel_dp:2077: thunderbolt 0000:00:0d.2: looking for DP IN <-> DP OUT pairs:
+May 25 18:48:34 obpc kernel: thunderbolt:tb_tunnel_dp:2091: thunderbolt 0000:00:0d.2: 0:5: DP IN available
+May 25 18:48:34 obpc kernel: thunderbolt:tb_tunnel_dp:2097: thunderbolt 0000:00:0d.2: 0:5: no suitable DP OUT adapter available, not tunneling
+May 25 18:48:34 obpc kernel: thunderbolt:tb_tunnel_dp:2091: thunderbolt 0000:00:0d.2: 0:6: DP IN available
+May 25 18:48:34 obpc kernel: thunderbolt:tb_tunnel_dp:2097: thunderbolt 0000:00:0d.2: 0:6: no suitable DP OUT adapter available, not tunneling
+May 25 18:48:34 obpc kernel: NVRM: GPU 0000:04:00.0: tb_egpu: qwd DETECTED dead bus (PMC_BOOT_0=0xffffffff after 80906 cycles).
+May 25 18:48:34 obpc kernel: pcieport 0000:00:07.0: pciehp: Slot(12): Link Down
+May 25 18:48:34 obpc kernel: pcieport 0000:00:07.0: pciehp: Slot(12): Card not present
+                               GPU(0000:04:00.0)    LnkSta=0xffff DevSta=0xffff  AER UESta=0x00000000 UEMsk=0x00000000 UESvrt=0x00000000 CESta=0x00000000 CEMsk=0x00000000
+                                          AER HdrLog=00000000_00000000_00000000_00000000
+                               Bridge(0000:03:00.0) LnkSta=0x0000 DevSta=0x0000  AER UESta=0x00000000 UEMsk=0x00000000 UESvrt=0x00000000 CESta=0x00000000 CEMsk=0x00000000
+                               Root(0000:00:07.0)   LnkSta=0x1041 DevSta=0x0010  AER UESta=0x00000000 UEMsk=0x00000000 CESta=0x00000000 CEMsk=0x00002000
+May 25 18:48:34 obpc kernel: NVRM: GPU at PCI:0000:04:00: GPU-90b9424e-7236-fd4d-d903-44e565e1bd42
+May 25 18:48:34 obpc kernel: NVRM: Xid (PCI:0000:04:00): 79, GPU has fallen off the bus.
+May 25 18:48:34 obpc kernel: NVRM: GPU 0000:04:00.0: GPU has fallen off the bus.
+May 25 18:48:34 obpc kernel: NVRM: GPU 0000:04:00.0: GPU serial number is 0.
+                             NVRM: nvidia-bug-report.sh as root to collect this data before
+                             NVRM: the NVIDIA kernel module is unloaded.
+May 25 18:48:34 obpc kernel: NVRM: Xid (PCI:0000:04:00): 154, GPU recovery action changed from 0x0 (None) to 0x1 (GPU Reset Required)
+May 25 18:48:34 obpc kernel: pci_bus 0000:04: busn_res: [bus 04] is released
+May 25 18:48:34 obpc kernel: pci_bus 0000:03: busn_res: [bus 03-2b] is released
+May 25 18:48:50 obpc kernel: thunderbolt:tb_cfg_ack_plug:851: thunderbolt 0000:00:0d.2: acking hot plug event on 0:1
+May 25 18:48:50 obpc kernel: thunderbolt:tb_handle_hotplug:2510: thunderbolt 0000:00:0d.2: 0:1: hotplug: scanning
+May 25 18:48:50 obpc kernel: thunderbolt:tb_cfg_ack_plug:851: thunderbolt 0000:00:0d.2: acking hot plug event on 0:2
+May 25 18:48:50 obpc kernel: thunderbolt:tb_wait_for_port:538: thunderbolt 0000:00:0d.2: 0:1: is connected, link is up (state: 2)
+May 25 18:48:50 obpc kernel: thunderbolt:tb_switch_alloc:2489: thunderbolt 0000:00:0d.2: current switch config:
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_switch:1571: thunderbolt 0000:00:0d.2:  USB4 Switch: 8087:5786 (Revision: 133, TB Version: 64)
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_switch:1574: thunderbolt 0000:00:0d.2:   Max Port Number: 23
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_switch:1575: thunderbolt 0000:00:0d.2:   Config:
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_switch:1576: thunderbolt 0000:00:0d.2:    Upstream Port Number: 1 Depth: 0 Route String: 0x0 Enabled: 0, PlugEventsDelay: 10ms
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_switch:1581: thunderbolt 0000:00:0d.2:    unknown1: 0x0 unknown4: 0x0
+May 25 18:48:50 obpc kernel: thunderbolt:tb_switch_configure:2618: thunderbolt 0000:00:0d.2: initializing Switch at 0x1 (depth: 1, up port: 1)
+May 25 18:48:50 obpc kernel: thunderbolt:tb_cfg_ack_plug:851: thunderbolt 0000:00:0d.2: acking hot plug event on 1:13
+May 25 18:48:50 obpc kernel: thunderbolt:usb4_switch_setup:260: thunderbolt 0000:00:0d.2: 1: link: USB4
+May 25 18:48:50 obpc kernel: thunderbolt:usb4_switch_setup:265: thunderbolt 0000:00:0d.2: 1: TBT3 support: yes, xHCI: yes
+May 25 18:48:50 obpc kernel: thunderbolt:tb_cfg_ack_plug:851: thunderbolt 0000:00:0d.2: acking hot plug event on 1:2
+May 25 18:48:50 obpc kernel: thunderbolt:tb_cfg_ack_plug:851: thunderbolt 0000:00:0d.2: acking hot plug event on 1:14
+May 25 18:48:50 obpc kernel: thunderbolt:tb_cfg_ack_plug:851: thunderbolt 0000:00:0d.2: acking hot plug event on 1:16
+May 25 18:48:50 obpc kernel: thunderbolt:usb4_switch_credits_init:780: thunderbolt 0000:00:0d.2: 1: credit allocation parameters:
+May 25 18:48:50 obpc kernel: thunderbolt:usb4_switch_credits_init:790: thunderbolt 0000:00:0d.2: 1:  USB3: 20
+May 25 18:48:50 obpc kernel: thunderbolt:usb4_switch_credits_init:794: thunderbolt 0000:00:0d.2: 1:  DP AUX: 1
+May 25 18:48:50 obpc kernel: thunderbolt:usb4_switch_credits_init:798: thunderbolt 0000:00:0d.2: 1:  DP main: 6
+May 25 18:48:50 obpc kernel: thunderbolt:usb4_switch_credits_init:802: thunderbolt 0000:00:0d.2: 1:  PCIe: 76
+May 25 18:48:50 obpc kernel: thunderbolt:usb4_switch_credits_init:810: thunderbolt 0000:00:0d.2: 1:  unknown credit allocation index 0x0, skipping
+May 25 18:48:50 obpc kernel: thunderbolt:tb_drom_parse:640: thunderbolt 0000:00:0d.2: 1: DROM version: 1
+May 25 18:48:50 obpc kernel: thunderbolt:tb_switch_add:3321: thunderbolt 0000:00:0d.2: 1: uid: 0xe87ca900808714c4
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:450: thunderbolt 0000:00:0d.2:  Port 1: 0:5780 (Revision: 0, TB Version: 1, Type: Port (0x1))
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:455: thunderbolt 0000:00:0d.2:   Max hop id (in/out): 31/31
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:457: thunderbolt 0000:00:0d.2:   Max counters: 4
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:458: thunderbolt 0000:00:0d.2:   NFC Credits: 0x4a000000
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:459: thunderbolt 0000:00:0d.2:   Credits (total/control): 160/2
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:450: thunderbolt 0000:00:0d.2:  Port 2: 0:5780 (Revision: 0, TB Version: 1, Type: Port (0x1))
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:455: thunderbolt 0000:00:0d.2:   Max hop id (in/out): 31/31
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:457: thunderbolt 0000:00:0d.2:   Max counters: 0
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:458: thunderbolt 0000:00:0d.2:   NFC Credits: 0xca000000
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:459: thunderbolt 0000:00:0d.2:   Credits (total/control): 160/2
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:450: thunderbolt 0000:00:0d.2:  Port 3: 0:5780 (Revision: 0, TB Version: 1, Type: Port (0x1))
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:455: thunderbolt 0000:00:0d.2:   Max hop id (in/out): 31/31
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:457: thunderbolt 0000:00:0d.2:   Max counters: 4
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:458: thunderbolt 0000:00:0d.2:   NFC Credits: 0x8a000000
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:459: thunderbolt 0000:00:0d.2:   Credits (total/control): 160/2
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:450: thunderbolt 0000:00:0d.2:  Port 4: 0:5780 (Revision: 0, TB Version: 1, Type: Port (0x1))
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:455: thunderbolt 0000:00:0d.2:   Max hop id (in/out): 31/31
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:457: thunderbolt 0000:00:0d.2:   Max counters: 0
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:458: thunderbolt 0000:00:0d.2:   NFC Credits: 0x8a000000
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:459: thunderbolt 0000:00:0d.2:   Credits (total/control): 160/2
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:450: thunderbolt 0000:00:0d.2:  Port 5: 0:5780 (Revision: 0, TB Version: 1, Type: Port (0x1))
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:455: thunderbolt 0000:00:0d.2:   Max hop id (in/out): 31/31
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:457: thunderbolt 0000:00:0d.2:   Max counters: 4
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:458: thunderbolt 0000:00:0d.2:   NFC Credits: 0x8a000000
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:459: thunderbolt 0000:00:0d.2:   Credits (total/control): 160/2
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:450: thunderbolt 0000:00:0d.2:  Port 6: 0:5780 (Revision: 0, TB Version: 1, Type: Port (0x1))
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:455: thunderbolt 0000:00:0d.2:   Max hop id (in/out): 31/31
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:457: thunderbolt 0000:00:0d.2:   Max counters: 0
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:458: thunderbolt 0000:00:0d.2:   NFC Credits: 0x8a000000
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:459: thunderbolt 0000:00:0d.2:   Credits (total/control): 160/2
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:450: thunderbolt 0000:00:0d.2:  Port 7: 0:5780 (Revision: 0, TB Version: 1, Type: Port (0x1))
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:455: thunderbolt 0000:00:0d.2:   Max hop id (in/out): 31/31
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:457: thunderbolt 0000:00:0d.2:   Max counters: 4
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:458: thunderbolt 0000:00:0d.2:   NFC Credits: 0x8a000000
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:459: thunderbolt 0000:00:0d.2:   Credits (total/control): 160/2
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:450: thunderbolt 0000:00:0d.2:  Port 8: 0:5780 (Revision: 0, TB Version: 1, Type: Port (0x1))
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:455: thunderbolt 0000:00:0d.2:   Max hop id (in/out): 31/31
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:457: thunderbolt 0000:00:0d.2:   Max counters: 0
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:458: thunderbolt 0000:00:0d.2:   NFC Credits: 0x8a000000
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:459: thunderbolt 0000:00:0d.2:   Credits (total/control): 160/2
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:450: thunderbolt 0000:00:0d.2:  Port 9: 0:5780 (Revision: 0, TB Version: 1, Type: PCIe (0x100102))
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:455: thunderbolt 0000:00:0d.2:   Max hop id (in/out): 8/8
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:457: thunderbolt 0000:00:0d.2:   Max counters: 2
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:458: thunderbolt 0000:00:0d.2:   NFC Credits: 0x40800000
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:459: thunderbolt 0000:00:0d.2:   Credits (total/control): 8/0
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:450: thunderbolt 0000:00:0d.2:  Port 10: 0:5780 (Revision: 0, TB Version: 1, Type: PCIe (0x100101))
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:455: thunderbolt 0000:00:0d.2:   Max hop id (in/out): 8/8
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:457: thunderbolt 0000:00:0d.2:   Max counters: 2
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:458: thunderbolt 0000:00:0d.2:   NFC Credits: 0x40800000
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:459: thunderbolt 0000:00:0d.2:   Credits (total/control): 8/0
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:450: thunderbolt 0000:00:0d.2:  Port 11: 0:5780 (Revision: 0, TB Version: 1, Type: DP/HDMI (0xe0102))
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:455: thunderbolt 0000:00:0d.2:   Max hop id (in/out): 9/9
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:457: thunderbolt 0000:00:0d.2:   Max counters: 2
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:458: thunderbolt 0000:00:0d.2:   NFC Credits: 0x800000
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:459: thunderbolt 0000:00:0d.2:   Credits (total/control): 8/0
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:450: thunderbolt 0000:00:0d.2:  Port 12: 0:5780 (Revision: 0, TB Version: 1, Type: DP/HDMI (0xe0102))
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:455: thunderbolt 0000:00:0d.2:   Max hop id (in/out): 9/9
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:457: thunderbolt 0000:00:0d.2:   Max counters: 2
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:458: thunderbolt 0000:00:0d.2:   NFC Credits: 0x800000
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:459: thunderbolt 0000:00:0d.2:   Credits (total/control): 8/0
+May 25 18:48:50 obpc kernel: thunderbolt:tb_switch_add:3331: thunderbolt 0000:00:0d.2: 1:13: disabled by eeprom
+May 25 18:48:50 obpc kernel: thunderbolt:tb_switch_add:3331: thunderbolt 0000:00:0d.2: 1:14: disabled by eeprom
+May 25 18:48:50 obpc kernel: thunderbolt:tb_init_port:718: thunderbolt 0000:00:0d.2:  Port 15: not implemented
+May 25 18:48:50 obpc kernel: thunderbolt:tb_switch_add:3331: thunderbolt 0000:00:0d.2: 1:16: disabled by eeprom
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:450: thunderbolt 0000:00:0d.2:  Port 17: 0:5780 (Revision: 0, TB Version: 1, Type: PCIe (0x100101))
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:455: thunderbolt 0000:00:0d.2:   Max hop id (in/out): 8/8
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:457: thunderbolt 0000:00:0d.2:   Max counters: 2
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:458: thunderbolt 0000:00:0d.2:   NFC Credits: 0x40800000
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:459: thunderbolt 0000:00:0d.2:   Credits (total/control): 8/0
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:450: thunderbolt 0000:00:0d.2:  Port 18: 0:5780 (Revision: 0, TB Version: 1, Type: PCIe (0x100101))
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:455: thunderbolt 0000:00:0d.2:   Max hop id (in/out): 8/8
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:457: thunderbolt 0000:00:0d.2:   Max counters: 2
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:458: thunderbolt 0000:00:0d.2:   NFC Credits: 0x40800000
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:459: thunderbolt 0000:00:0d.2:   Credits (total/control): 8/0
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:450: thunderbolt 0000:00:0d.2:  Port 19: 0:5780 (Revision: 0, TB Version: 1, Type: DP/HDMI (0xe0102))
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:455: thunderbolt 0000:00:0d.2:   Max hop id (in/out): 9/9
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:457: thunderbolt 0000:00:0d.2:   Max counters: 2
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:458: thunderbolt 0000:00:0d.2:   NFC Credits: 0x800000
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:459: thunderbolt 0000:00:0d.2:   Credits (total/control): 8/0
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:450: thunderbolt 0000:00:0d.2:  Port 20: 0:5780 (Revision: 0, TB Version: 1, Type: USB (0x200102))
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:455: thunderbolt 0000:00:0d.2:   Max hop id (in/out): 8/8
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:457: thunderbolt 0000:00:0d.2:   Max counters: 1
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:458: thunderbolt 0000:00:0d.2:   NFC Credits: 0x800000
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:459: thunderbolt 0000:00:0d.2:   Credits (total/control): 8/0
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:450: thunderbolt 0000:00:0d.2:  Port 21: 0:5780 (Revision: 0, TB Version: 1, Type: USB (0x200101))
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:455: thunderbolt 0000:00:0d.2:   Max hop id (in/out): 8/8
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:457: thunderbolt 0000:00:0d.2:   Max counters: 1
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:458: thunderbolt 0000:00:0d.2:   NFC Credits: 0x800000
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:459: thunderbolt 0000:00:0d.2:   Credits (total/control): 8/0
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:450: thunderbolt 0000:00:0d.2:  Port 22: 0:5780 (Revision: 0, TB Version: 1, Type: USB (0x200101))
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:455: thunderbolt 0000:00:0d.2:   Max hop id (in/out): 8/8
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:457: thunderbolt 0000:00:0d.2:   Max counters: 1
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:458: thunderbolt 0000:00:0d.2:   NFC Credits: 0x800000
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:459: thunderbolt 0000:00:0d.2:   Credits (total/control): 8/0
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:450: thunderbolt 0000:00:0d.2:  Port 23: 0:5780 (Revision: 0, TB Version: 1, Type: USB (0x200101))
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:455: thunderbolt 0000:00:0d.2:   Max hop id (in/out): 8/8
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:457: thunderbolt 0000:00:0d.2:   Max counters: 1
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:458: thunderbolt 0000:00:0d.2:   NFC Credits: 0x800000
+May 25 18:48:50 obpc kernel: thunderbolt:tb_dump_port:459: thunderbolt 0000:00:0d.2:   Credits (total/control): 8/0
+May 25 18:48:50 obpc kernel: thunderbolt:tb_check_quirks:134: thunderbolt 0000:00:0d.2: 1: running quirk_usb3_maximum_bandwidth [thunderbolt]
+May 25 18:48:50 obpc kernel: thunderbolt:quirk_usb3_maximum_bandwidth:41: thunderbolt 0000:00:0d.2: 1:21: USB3 maximum bandwidth limited to 16376 Mb/s
+May 25 18:48:50 obpc kernel: thunderbolt:quirk_usb3_maximum_bandwidth:41: thunderbolt 0000:00:0d.2: 1:22: USB3 maximum bandwidth limited to 16376 Mb/s
+May 25 18:48:50 obpc kernel: thunderbolt:quirk_usb3_maximum_bandwidth:41: thunderbolt 0000:00:0d.2: 1:23: USB3 maximum bandwidth limited to 16376 Mb/s
+May 25 18:48:50 obpc kernel: thunderbolt:tb_switch_link_init:2903: thunderbolt 0000:00:0d.2: 1: current link speed 20.0 Gb/s
+May 25 18:48:50 obpc kernel: thunderbolt:tb_switch_link_init:2904: thunderbolt 0000:00:0d.2: 1: current link width symmetric, single lane
+May 25 18:48:50 obpc kernel: thunderbolt:tb_port_do_update_credits:1253: thunderbolt 0000:00:0d.2: 0:1: total credits changed 120 -> 60
+May 25 18:48:50 obpc kernel: thunderbolt:tb_port_do_update_credits:1253: thunderbolt 0000:00:0d.2: 0:2: total credits changed 0 -> 60
+May 25 18:48:50 obpc kernel: thunderbolt:tmu_mode_init:364: thunderbolt 0000:00:0d.2: 1: TMU: supports uni-directional mode
+May 25 18:48:50 obpc kernel: thunderbolt:tmu_mode_init:367: thunderbolt 0000:00:0d.2: 1: TMU: supports enhanced uni-directional mode
+May 25 18:48:50 obpc kernel: thunderbolt:tb_switch_tmu_init:435: thunderbolt 0000:00:0d.2: 1: TMU: current mode: off
+May 25 18:48:50 obpc kernel: thunderbolt 0-1: new device found, vendor=0xed device=0x41b6
+May 25 18:48:50 obpc kernel: thunderbolt 0-1: GIGABYTE AORUS RTX5090 AI BOX
+May 25 18:48:50 obpc kernel: thunderbolt:tb_switch_nvm_add:377: thunderbolt 0000:00:0d.2: 1: NVM version 62.2
+May 25 18:48:50 obpc kernel: thunderbolt:tb_wait_for_port:538: thunderbolt 0000:00:0d.2: 0:2: is connected, link is up (state: 2)
+May 25 18:48:50 obpc kernel: thunderbolt:tb_cfg_ack_plug:851: thunderbolt 0000:00:0d.2: acking hot unplug event on 0:2
+May 25 18:48:50 obpc kernel: thunderbolt:tb_cfg_ack_plug:851: thunderbolt 0000:00:0d.2: acking hot unplug event on 1:2
+May 25 18:48:50 obpc kernel: thunderbolt:tb_port_do_update_credits:1253: thunderbolt 0000:00:0d.2: 0:1: total credits changed 60 -> 120
+May 25 18:48:50 obpc kernel: thunderbolt:tb_port_do_update_credits:1253: thunderbolt 0000:00:0d.2: 0:2: total credits changed 60 -> 0
+May 25 18:48:50 obpc kernel: thunderbolt:tb_switch_set_link_width:3181: thunderbolt 0000:00:0d.2: 1: link width set to symmetric, dual lanes
+May 25 18:48:50 obpc kernel: thunderbolt:tb_retimer_nvm_authenticate_status:201: thunderbolt 0000:00:0d.2: 0:1: reading NVM authentication status of retimers
+May 25 18:48:51 obpc kernel: thunderbolt:tb_retimer_nvm_add:104: thunderbolt 0-0:1.1: NVM version 26.85
+May 25 18:48:51 obpc kernel: thunderbolt 0-0:1.1: new retimer found, vendor=0x8087 device=0xd9c
+May 25 18:48:51 obpc kernel: thunderbolt:tb_retimer_unset_inbound_sbtx:243: thunderbolt 0000:00:0d.2: 0:1: disabling sideband transactions
+May 25 18:48:51 obpc kernel: thunderbolt:tb_switch_tmu_configure:1066: thunderbolt 0000:00:0d.2: 1: TMU: mode change off -> bi-directional, HiFi requested
+May 25 18:48:51 obpc kernel: thunderbolt:tb_switch_tmu_post_time:473: thunderbolt 0000:00:0d.2: 0: TMU: local_time[0]=0x23680000
+May 25 18:48:51 obpc kernel: thunderbolt:tb_switch_tmu_post_time:473: thunderbolt 0000:00:0d.2: 0: TMU: local_time[1]=0x0f6541cc
+May 25 18:48:51 obpc kernel: thunderbolt:tb_switch_tmu_post_time:473: thunderbolt 0000:00:0d.2: 0: TMU: local_time[2]=0x03e80000
+May 25 18:48:51 obpc kernel: thunderbolt:tb_switch_tmu_post_time:533: thunderbolt 0000:00:0d.2: 1: TMU: updated local time to 0xf6541cc2368
+May 25 18:48:51 obpc kernel: thunderbolt:tb_switch_tmu_enable:1014: thunderbolt 0000:00:0d.2: 1: TMU: mode set to: bi-directional, HiFi
+May 25 18:48:51 obpc kernel: thunderbolt:tb_retimer_nvm_authenticate_status:201: thunderbolt 0000:00:0d.2: 1:1: reading NVM authentication status of retimers
+May 25 18:48:51 obpc kernel: thunderbolt:tb_retimer_unset_inbound_sbtx:243: thunderbolt 0000:00:0d.2: 1:1: disabling sideband transactions
+May 25 18:48:51 obpc kernel: thunderbolt:tb_maximum_bandwidth:790: thunderbolt 0000:00:0d.2: 0:1: link maximum bandwidth 36000/36000 Mb/s
+May 25 18:48:51 obpc kernel: thunderbolt:tb_maximum_bandwidth:790: thunderbolt 0000:00:0d.2: 1:1: link maximum bandwidth 36000/36000 Mb/s
+May 25 18:48:51 obpc kernel: thunderbolt:tb_tunnel_usb3:956: thunderbolt 0000:00:0d.2: 1:20: available bandwidth for new USB3 tunnel 36000/36000 Mb/s
+May 25 18:48:51 obpc kernel: thunderbolt:tb_tunnel_alloc_usb3:2300: thunderbolt 0000:00:0d.2: 1:20: maximum required bandwidth for USB3 tunnel 14738 Mb/s
+May 25 18:48:51 obpc kernel: thunderbolt:tb_tunnel_activate:2380: thunderbolt 0000:00:0d.2: 0:12 <-> 1:20 (USB3): activating
+May 25 18:48:51 obpc kernel: thunderbolt:tb_usb3_pre_activate:2017: thunderbolt 0000:00:0d.2: 0:12 <-> 1:20 (USB3): allocating initial bandwidth 14738/14738 Mb/s
+May 25 18:48:51 obpc kernel: thunderbolt:usb4_usb3_port_write_allocated_bandwidth:2390: thunderbolt 0000:00:0d.2: 0:12: scaled bandwidth 3599/3599, scale 0
+May 25 18:48:51 obpc kernel: thunderbolt:tb_path_activate:514: thunderbolt 0000:00:0d.2: activating USB3 Down path from 0:12 to 1:20
+May 25 18:48:51 obpc kernel: thunderbolt:tb_path_activate:575: thunderbolt 0000:00:0d.2: 1:1: Writing hop 1
+May 25 18:48:51 obpc kernel: thunderbolt:tb_dump_hop:20: thunderbolt 0000:00:0d.2: 1:1:  In HopID: 8 => Out port: 20 Out HopID: 8
+May 25 18:48:51 obpc kernel: thunderbolt:tb_dump_hop:22: thunderbolt 0000:00:0d.2: 1:1:   Weight: 2 Priority: 3 Credits: 20 Drop: 0 PM: 0
+May 25 18:48:51 obpc kernel: thunderbolt:tb_dump_hop:25: thunderbolt 0000:00:0d.2: 1:1:    Counter enabled: 0 Counter index: 2047
+May 25 18:48:51 obpc kernel: thunderbolt:tb_dump_hop:27: thunderbolt 0000:00:0d.2: 1:1:   Flow Control (In/Eg): 1/0 Shared Buffer (In/Eg): 0/0
+May 25 18:48:51 obpc kernel: thunderbolt:tb_dump_hop:30: thunderbolt 0000:00:0d.2: 1:1:   Unknown1: 0x0 Unknown2: 0x0 Unknown3: 0x0
+May 25 18:48:51 obpc kernel: thunderbolt:tb_path_activate:575: thunderbolt 0000:00:0d.2: 0:12: Writing hop 0
+May 25 18:48:51 obpc kernel: thunderbolt:tb_dump_hop:20: thunderbolt 0000:00:0d.2: 0:12:  In HopID: 8 => Out port: 1 Out HopID: 8
+May 25 18:48:51 obpc kernel: thunderbolt:tb_dump_hop:22: thunderbolt 0000:00:0d.2: 0:12:   Weight: 2 Priority: 3 Credits: 7 Drop: 0 PM: 0
+May 25 18:48:51 obpc kernel: thunderbolt:tb_dump_hop:25: thunderbolt 0000:00:0d.2: 0:12:    Counter enabled: 0 Counter index: 2047
+May 25 18:48:51 obpc kernel: thunderbolt:tb_dump_hop:27: thunderbolt 0000:00:0d.2: 0:12:   Flow Control (In/Eg): 1/1 Shared Buffer (In/Eg): 0/0
+May 25 18:48:51 obpc kernel: thunderbolt:tb_dump_hop:30: thunderbolt 0000:00:0d.2: 0:12:   Unknown1: 0x0 Unknown2: 0x0 Unknown3: 0x0
+May 25 18:48:51 obpc kernel: thunderbolt:tb_path_activate:586: thunderbolt 0000:00:0d.2: USB3 Down path activation complete
+May 25 18:48:51 obpc kernel: thunderbolt:tb_path_activate:514: thunderbolt 0000:00:0d.2: activating USB3 Up path from 1:20 to 0:12
+May 25 18:48:51 obpc kernel: thunderbolt:tb_path_activate:575: thunderbolt 0000:00:0d.2: 0:1: Writing hop 1
+May 25 18:48:51 obpc kernel: thunderbolt:tb_dump_hop:20: thunderbolt 0000:00:0d.2: 0:1:  In HopID: 8 => Out port: 12 Out HopID: 8
+May 25 18:48:51 obpc kernel: thunderbolt:tb_dump_hop:22: thunderbolt 0000:00:0d.2: 0:1:   Weight: 2 Priority: 3 Credits: 32 Drop: 0 PM: 0
+May 25 18:48:51 obpc kernel: thunderbolt:tb_dump_hop:25: thunderbolt 0000:00:0d.2: 0:1:    Counter enabled: 0 Counter index: 2047
+May 25 18:48:51 obpc kernel: thunderbolt:tb_dump_hop:27: thunderbolt 0000:00:0d.2: 0:1:   Flow Control (In/Eg): 1/0 Shared Buffer (In/Eg): 0/0
+May 25 18:48:51 obpc kernel: thunderbolt:tb_dump_hop:30: thunderbolt 0000:00:0d.2: 0:1:   Unknown1: 0x0 Unknown2: 0x0 Unknown3: 0x0
+May 25 18:48:51 obpc kernel: thunderbolt:tb_path_activate:575: thunderbolt 0000:00:0d.2: 1:20: Writing hop 0
+May 25 18:48:51 obpc kernel: thunderbolt:tb_dump_hop:20: thunderbolt 0000:00:0d.2: 1:20:  In HopID: 8 => Out port: 1 Out HopID: 8
+May 25 18:48:51 obpc kernel: thunderbolt:tb_dump_hop:22: thunderbolt 0000:00:0d.2: 1:20:   Weight: 2 Priority: 3 Credits: 7 Drop: 0 PM: 0
+May 25 18:48:51 obpc kernel: thunderbolt:tb_dump_hop:25: thunderbolt 0000:00:0d.2: 1:20:    Counter enabled: 0 Counter index: 2047
+May 25 18:48:51 obpc kernel: thunderbolt:tb_dump_hop:27: thunderbolt 0000:00:0d.2: 1:20:   Flow Control (In/Eg): 1/1 Shared Buffer (In/Eg): 0/0
+May 25 18:48:51 obpc kernel: thunderbolt:tb_dump_hop:30: thunderbolt 0000:00:0d.2: 1:20:   Unknown1: 0x0 Unknown2: 0x0 Unknown3: 0x0
+May 25 18:48:51 obpc kernel: thunderbolt:tb_path_activate:586: thunderbolt 0000:00:0d.2: USB3 Up path activation complete
+May 25 18:48:51 obpc kernel: thunderbolt:tb_wait_for_port:530: thunderbolt 0000:00:0d.2: 1:3: is unplugged (state: 7)
+May 25 18:48:51 obpc kernel: thunderbolt:tb_wait_for_port:530: thunderbolt 0000:00:0d.2: 1:5: is unplugged (state: 7)
+May 25 18:48:51 obpc kernel: thunderbolt:tb_wait_for_port:530: thunderbolt 0000:00:0d.2: 1:7: is unplugged (state: 7)
+May 25 18:48:51 obpc kernel: thunderbolt:tb_handle_hotplug:2504: thunderbolt 0000:00:0d.2: 0:2: got plug event for connected port, ignoring
+May 25 18:48:51 obpc kernel: thunderbolt:tb_handle_hotplug:2451: thunderbolt 0000:00:0d.2: hotplug event for upstream port 1:2 (unplug: 0)
+May 25 18:48:51 obpc kernel: thunderbolt:tb_handle_hotplug:2500: thunderbolt 0000:00:0d.2: 0:2: got unplug event for disconnected port, ignoring
+May 25 18:48:51 obpc kernel: thunderbolt:tb_handle_hotplug:2451: thunderbolt 0000:00:0d.2: hotplug event for upstream port 1:2 (unplug: 1)
+May 25 18:52:42 obpc kernel: thunderbolt:tb_tunnel_activate:2380: thunderbolt 0000:00:0d.2: 0:8 <-> 1:9 (PCI): activating
+May 25 18:52:42 obpc kernel: thunderbolt:tb_path_activate:514: thunderbolt 0000:00:0d.2: activating PCIe Down path from 0:8 to 1:9
+May 25 18:52:42 obpc kernel: thunderbolt:tb_path_activate:575: thunderbolt 0000:00:0d.2: 1:1: Writing hop 1
+May 25 18:52:42 obpc kernel: thunderbolt:tb_dump_hop:20: thunderbolt 0000:00:0d.2: 1:1:  In HopID: 9 => Out port: 9 Out HopID: 8
+May 25 18:52:42 obpc kernel: thunderbolt:tb_dump_hop:22: thunderbolt 0000:00:0d.2: 1:1:   Weight: 1 Priority: 3 Credits: 76 Drop: 0 PM: 0
+May 25 18:52:42 obpc kernel: thunderbolt:tb_dump_hop:25: thunderbolt 0000:00:0d.2: 1:1:    Counter enabled: 0 Counter index: 2047
+May 25 18:52:42 obpc kernel: thunderbolt:tb_dump_hop:27: thunderbolt 0000:00:0d.2: 1:1:   Flow Control (In/Eg): 1/0 Shared Buffer (In/Eg): 0/0
+May 25 18:52:42 obpc kernel: thunderbolt:tb_dump_hop:30: thunderbolt 0000:00:0d.2: 1:1:   Unknown1: 0x0 Unknown2: 0x0 Unknown3: 0x0
+May 25 18:52:42 obpc kernel: thunderbolt:tb_path_activate:575: thunderbolt 0000:00:0d.2: 0:8: Writing hop 0
+May 25 18:52:42 obpc kernel: thunderbolt:tb_dump_hop:20: thunderbolt 0000:00:0d.2: 0:8:  In HopID: 8 => Out port: 1 Out HopID: 9
+May 25 18:52:42 obpc kernel: thunderbolt:tb_dump_hop:22: thunderbolt 0000:00:0d.2: 0:8:   Weight: 1 Priority: 3 Credits: 7 Drop: 0 PM: 0
+May 25 18:52:42 obpc kernel: thunderbolt:tb_dump_hop:25: thunderbolt 0000:00:0d.2: 0:8:    Counter enabled: 0 Counter index: 2047
+May 25 18:52:42 obpc kernel: thunderbolt:tb_dump_hop:27: thunderbolt 0000:00:0d.2: 0:8:   Flow Control (In/Eg): 1/1 Shared Buffer (In/Eg): 0/0
+May 25 18:52:42 obpc kernel: thunderbolt:tb_dump_hop:30: thunderbolt 0000:00:0d.2: 0:8:   Unknown1: 0x0 Unknown2: 0x0 Unknown3: 0x0
+May 25 18:52:42 obpc kernel: thunderbolt:tb_path_activate:586: thunderbolt 0000:00:0d.2: PCIe Down path activation complete
+May 25 18:52:42 obpc kernel: thunderbolt:tb_path_activate:514: thunderbolt 0000:00:0d.2: activating PCIe Up path from 1:9 to 0:8
+May 25 18:52:42 obpc kernel: thunderbolt:tb_path_activate:575: thunderbolt 0000:00:0d.2: 0:1: Writing hop 1
+May 25 18:52:42 obpc kernel: thunderbolt:tb_dump_hop:20: thunderbolt 0000:00:0d.2: 0:1:  In HopID: 9 => Out port: 8 Out HopID: 8
+May 25 18:52:42 obpc kernel: thunderbolt:tb_dump_hop:22: thunderbolt 0000:00:0d.2: 0:1:   Weight: 1 Priority: 3 Credits: 64 Drop: 0 PM: 0
+May 25 18:52:42 obpc kernel: thunderbolt:tb_dump_hop:25: thunderbolt 0000:00:0d.2: 0:1:    Counter enabled: 0 Counter index: 2047
+May 25 18:52:42 obpc kernel: thunderbolt:tb_dump_hop:27: thunderbolt 0000:00:0d.2: 0:1:   Flow Control (In/Eg): 1/0 Shared Buffer (In/Eg): 0/0
+May 25 18:52:42 obpc kernel: thunderbolt:tb_dump_hop:30: thunderbolt 0000:00:0d.2: 0:1:   Unknown1: 0x0 Unknown2: 0x0 Unknown3: 0x0
+May 25 18:52:42 obpc kernel: thunderbolt:tb_path_activate:575: thunderbolt 0000:00:0d.2: 1:9: Writing hop 0
+May 25 18:52:42 obpc kernel: thunderbolt:tb_dump_hop:20: thunderbolt 0000:00:0d.2: 1:9:  In HopID: 8 => Out port: 1 Out HopID: 9
+May 25 18:52:42 obpc kernel: thunderbolt:tb_dump_hop:22: thunderbolt 0000:00:0d.2: 1:9:   Weight: 1 Priority: 3 Credits: 7 Drop: 0 PM: 0
+May 25 18:52:42 obpc kernel: thunderbolt:tb_dump_hop:25: thunderbolt 0000:00:0d.2: 1:9:    Counter enabled: 0 Counter index: 2047
+May 25 18:52:42 obpc kernel: thunderbolt:tb_dump_hop:27: thunderbolt 0000:00:0d.2: 1:9:   Flow Control (In/Eg): 1/1 Shared Buffer (In/Eg): 0/0
+May 25 18:52:42 obpc kernel: thunderbolt:tb_dump_hop:30: thunderbolt 0000:00:0d.2: 1:9:   Unknown1: 0x0 Unknown2: 0x0 Unknown3: 0x0
+May 25 18:52:42 obpc kernel: thunderbolt:tb_path_activate:586: thunderbolt 0000:00:0d.2: PCIe Up path activation complete
+May 25 18:52:42 obpc kernel: pcieport 0000:00:07.0: pciehp: Slot(12): Card present
+May 25 18:52:42 obpc kernel: pcieport 0000:00:07.0: pciehp: Slot(12): Link Up
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0: [8086:5786] type 01 class 0x060400 PCIe Switch Upstream Port
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0: PCI bridge to [bus 00]
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0:   bridge window [io  0x0000-0x0fff]
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0:   bridge window [mem 0x00000000-0x000fffff]
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0: enabling Extended Tags
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0: supports D1 D2
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0: PME# supported from D0 D1 D2 D3hot D3cold
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0: PTM enabled, 4ns granularity
+May 25 18:52:42 obpc kernel: pcieport 0000:00:07.0: ASPM: current common clock configuration is inconsistent, reconfiguring
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: [8086:5786] type 01 class 0x060400 PCIe Switch Downstream Port
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: PCI bridge to [bus 00]
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0:   bridge window [io  0x0000-0x0fff]
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0:   bridge window [mem 0x00000000-0x000fffff]
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: enabling Extended Tags
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: supports D1 D2
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: PME# supported from D0 D1 D2 D3hot D3cold
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0: [8086:5786] type 01 class 0x060400 PCIe Switch Downstream Port
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0: PCI bridge to [bus 00]
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0:   bridge window [io  0x0000-0x0fff]
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0:   bridge window [mem 0x00000000-0x000fffff]
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0: enabling Extended Tags
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0: supports D1 D2
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0: PME# supported from D0 D1 D2 D3hot D3cold
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0: [8086:5786] type 01 class 0x060400 PCIe Switch Downstream Port
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0: PCI bridge to [bus 00]
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0:   bridge window [io  0x0000-0x0fff]
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0:   bridge window [mem 0x00000000-0x000fffff]
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0: enabling Extended Tags
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0: supports D1 D2
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0: PME# supported from D0 D1 D2 D3hot D3cold
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0: [8086:5786] type 01 class 0x060400 PCIe Switch Downstream Port
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0: PCI bridge to [bus 00]
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0:   bridge window [io  0x0000-0x0fff]
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0:   bridge window [mem 0x00000000-0x000fffff]
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0: enabling Extended Tags
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0: supports D1 D2
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0: PME# supported from D0 D1 D2 D3hot D3cold
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0: PCI bridge to [bus 03-2b]
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: [10de:2b85] type 00 class 0x030000 PCIe Legacy Endpoint
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 0 [mem 0x00000000-0x03ffffff]
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 1 [mem 0x00000000-0x0fffffff 64bit pref]
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 3 [mem 0x00000000-0x01ffffff 64bit pref]
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 5 [io  0x0000-0x007f]
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: ROM [mem 0x00000000-0x0007ffff pref]
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: Enabling HDA controller
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: PME# supported from D0 D3hot
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 0 [mem 0x00000000-0x0003ffff 64bit pref]
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 0 [mem 0x00000000-0x0003ffff 64bit pref]: contains BAR 0 for 1 VFs
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 2 [mem 0x00000000-0x0fffffff 64bit pref]
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 2 [mem 0x00000000-0x0fffffff 64bit pref]: contains BAR 2 for 1 VFs
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 4 [mem 0x00000000-0x01ffffff 64bit pref]
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 4 [mem 0x00000000-0x01ffffff 64bit pref]: contains BAR 4 for 1 VFs
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: 8.000 Gb/s available PCIe bandwidth, limited by 2.5 GT/s PCIe x4 link at 0000:00:07.0 (capable of 504.112 Gb/s with 32.0 GT/s PCIe x16 link)
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: vgaarb: bridge control possible
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+May 25 18:52:42 obpc kernel: pci 0000:04:00.1: [10de:22e8] type 00 class 0x040300 PCIe Endpoint
+May 25 18:52:42 obpc kernel: pci 0000:04:00.1: BAR 0 [mem 0x00000000-0x00003fff]
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: PCI bridge to [bus 04-2b]
+May 25 18:52:42 obpc kernel: pci_bus 0000:04: busn_res: [bus 04-2b] end is updated to 04
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0: PCI bridge to [bus 05-2b]
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0: PCI bridge to [bus 12-2b]
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0: PCI bridge to [bus 1f-2b]
+May 25 18:52:42 obpc kernel: pci_bus 0000:03: busn_res: [bus 03-2b] end is updated to 2b
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: bridge window [mem size 0x12000000 64bit pref] to [bus 04] add_size 12100000 add_align 10000000
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0: bridge window [mem 0x00100000-0x000fffff 64bit pref] to [bus 05-11] add_size 200000 add_align 100000
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0: bridge window [mem 0x00100000-0x000fffff] to [bus 05-11] add_size 200000 add_align 100000
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0: bridge window [mem 0x00100000-0x000fffff 64bit pref] to [bus 12-1e] add_size 200000 add_align 100000
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0: bridge window [mem 0x00100000-0x000fffff] to [bus 12-1e] add_size 200000 add_align 100000
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0: bridge window [mem 0x00100000-0x000fffff 64bit pref] to [bus 1f-2b] add_size 200000 add_align 100000
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0: bridge window [mem 0x00100000-0x000fffff] to [bus 1f-2b] add_size 200000 add_align 100000
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0: bridge window [mem 0x10000000-0x21ffffff 64bit pref] to [bus 03-2b] add_size 12700000 add_align 10000000
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0: bridge window [mem 0x04000000-0x080fffff] to [bus 03-2b] add_size 600000 add_align 4000000
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0: bridge window [mem 0x4000000000-0x5011ffffff 64bit pref]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0: bridge window [mem 0x80000000-0x880fffff]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0: bridge window [io  size 0x4000]: can't assign; no space
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0: bridge window [io  size 0x4000]: failed to assign
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0: bridge window [io  size 0x4000]: can't assign; no space
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0: bridge window [io  size 0x4000]: failed to assign
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: bridge window [mem 0x4000000000-0x4011ffffff 64bit pref]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: bridge window [mem 0x80000000-0x840fffff]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0: bridge window [mem 0x84100000-0x855fffff]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0: bridge window [mem 0x4012000000-0x45674fffff 64bit pref]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0: bridge window [mem 0x85600000-0x86afffff]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0: bridge window [mem 0x4567500000-0x4abc9fffff 64bit pref]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0: bridge window [mem 0x86b00000-0x87ffffff]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0: bridge window [mem 0x4abca00000-0x5011efffff 64bit pref]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: bridge window [io  size 0x1000]: can't assign; no space
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: bridge window [io  size 0x1000]: failed to assign
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0: bridge window [io  size 0x1000]: can't assign; no space
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0: bridge window [io  size 0x1000]: failed to assign
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0: bridge window [io  size 0x1000]: can't assign; no space
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0: bridge window [io  size 0x1000]: failed to assign
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0: bridge window [io  size 0x1000]: can't assign; no space
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0: bridge window [io  size 0x1000]: failed to assign
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: bridge window [io  size 0x1000]: can't assign; no space
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: bridge window [io  size 0x1000]: failed to assign
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0: bridge window [io  size 0x1000]: can't assign; no space
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0: bridge window [io  size 0x1000]: failed to assign
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0: bridge window [io  size 0x1000]: can't assign; no space
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0: bridge window [io  size 0x1000]: failed to assign
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0: bridge window [io  size 0x1000]: can't assign; no space
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0: bridge window [io  size 0x1000]: failed to assign
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 1 [mem 0x4000000000-0x400fffffff 64bit pref]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 2 [mem size 0x10000000 64bit pref]: can't assign; no space
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 2 [mem size 0x10000000 64bit pref]: failed to assign
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 0 [mem 0x80000000-0x83ffffff]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 3 [mem 0x4010000000-0x4011ffffff 64bit pref]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 4 [mem size 0x02000000 64bit pref]: can't assign; no space
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 4 [mem size 0x02000000 64bit pref]: failed to assign
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: ROM [mem 0x84000000-0x8407ffff pref]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 0 [mem 0x84080000-0x840bffff 64bit pref]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:04:00.1: BAR 0 [mem 0x840c0000-0x840c3fff]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 5 [io  size 0x0080]: can't assign; no space
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 5 [io  size 0x0080]: failed to assign
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 1 [mem 0x4000000000-0x400fffffff 64bit pref]: releasing
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 0 [mem 0x80000000-0x83ffffff]: releasing
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 3 [mem 0x4010000000-0x4011ffffff 64bit pref]: releasing
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: ROM [mem 0x84000000-0x8407ffff pref]: releasing
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 0 [mem 0x84080000-0x840bffff 64bit pref]: releasing
+May 25 18:52:42 obpc kernel: pci 0000:04:00.1: BAR 0 [mem 0x840c0000-0x840c3fff]: releasing
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 1 [mem 0x4000000000-0x400fffffff 64bit pref]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 0 [mem 0x80000000-0x83ffffff]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 3 [mem 0x4010000000-0x4011ffffff 64bit pref]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:04:00.1: BAR 0 [mem 0x84000000-0x84003fff]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 5 [io  size 0x0080]: can't assign; no space
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 5 [io  size 0x0080]: failed to assign
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: ROM [mem 0x84080000-0x840fffff pref]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 4 [mem size 0x02000000 64bit pref]: can't assign; no space
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 4 [mem size 0x02000000 64bit pref]: failed to assign
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 2 [mem size 0x10000000 64bit pref]: can't assign; no space
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 2 [mem size 0x10000000 64bit pref]: failed to assign
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 0 [mem 0x84040000-0x8407ffff 64bit pref]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: PCI bridge to [bus 04]
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0:   bridge window [mem 0x80000000-0x840fffff]
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0:   bridge window [mem 0x4000000000-0x4011ffffff 64bit pref]
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0: PCI bridge to [bus 05-11]
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0:   bridge window [mem 0x84100000-0x855fffff]
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0:   bridge window [mem 0x4012000000-0x45674fffff 64bit pref]
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0: PCI bridge to [bus 12-1e]
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0:   bridge window [mem 0x85600000-0x86afffff]
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0:   bridge window [mem 0x4567500000-0x4abc9fffff 64bit pref]
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0: PCI bridge to [bus 1f-2b]
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0:   bridge window [mem 0x86b00000-0x87ffffff]
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0:   bridge window [mem 0x4abca00000-0x5011efffff 64bit pref]
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0: PCI bridge to [bus 03-2b]
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0:   bridge window [mem 0x80000000-0x880fffff]
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0:   bridge window [mem 0x4000000000-0x5011ffffff 64bit pref]
+May 25 18:52:42 obpc kernel: pcieport 0000:00:07.0: PCI bridge to [bus 02-2b]
+May 25 18:52:42 obpc kernel: pcieport 0000:00:07.0:   bridge window [io  0x3000-0x3fff]
+May 25 18:52:42 obpc kernel: pcieport 0000:00:07.0:   bridge window [mem 0x80000000-0x89efffff]
+May 25 18:52:42 obpc kernel: pcieport 0000:00:07.0:   bridge window [mem 0x4000000000-0x5013ffffff 64bit pref]
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: bridge window [mem 0x4000000000-0x4011ffffff 64bit pref]: releasing
+May 25 18:52:42 obpc kernel: pcieport 0000:00:07.0: bridge window [io  0x3000-0x3fff]: releasing
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: bridge window [mem size 0x12000000 64bit pref] to [bus 04] add_size 12000000 add_align 10000000
+May 25 18:52:42 obpc kernel: pcieport 0000:00:07.0: bridge window [io  0x5000-0x8fff]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0: bridge window [io  0x5000-0x8fff]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: bridge window [mem size 0x24000000 64bit pref]: can't assign; no space
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: bridge window [mem size 0x24000000 64bit pref]: failed to assign
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: bridge window [io  0x5000-0x5fff]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0: bridge window [io  0x6000-0x6fff]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0: bridge window [io  0x7000-0x7fff]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0: bridge window [io  0x8000-0x8fff]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: bridge window [mem 0x4000000000-0x4011ffffff 64bit pref]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: bridge window [mem 0x4000000000-0x4011ffffff 64bit pref]: failed to expand by 0x12000000
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: bridge window [mem 0x4000000000-0x4011ffffff 64bit pref]: failed to add optional 12000000
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 1 [mem 0x4000000000-0x400fffffff 64bit pref]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 2 [mem size 0x10000000 64bit pref]: can't assign; no space
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 2 [mem size 0x10000000 64bit pref]: failed to assign
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 3 [mem 0x4010000000-0x4011ffffff 64bit pref]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 4 [mem size 0x02000000 64bit pref]: can't assign; no space
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 4 [mem size 0x02000000 64bit pref]: failed to assign
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 5 [io  0x5000-0x507f]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 1 [mem 0x4000000000-0x400fffffff 64bit pref]: releasing
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 3 [mem 0x4010000000-0x4011ffffff 64bit pref]: releasing
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 1 [mem 0x4000000000-0x400fffffff 64bit pref]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: BAR 3 [mem 0x4010000000-0x4011ffffff 64bit pref]: assigned
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 4 [mem size 0x02000000 64bit pref]: can't assign; no space
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 4 [mem size 0x02000000 64bit pref]: failed to assign
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 2 [mem size 0x10000000 64bit pref]: can't assign; no space
+May 25 18:52:42 obpc kernel: pci 0000:04:00.0: VF BAR 2 [mem size 0x10000000 64bit pref]: failed to assign
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0: PCI bridge to [bus 04]
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0:   bridge window [io  0x5000-0x5fff]
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0:   bridge window [mem 0x80000000-0x840fffff]
+May 25 18:52:42 obpc kernel: pci 0000:03:00.0:   bridge window [mem 0x4000000000-0x4011ffffff 64bit pref]
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0: PCI bridge to [bus 05-11]
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0:   bridge window [io  0x6000-0x6fff]
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0:   bridge window [mem 0x84100000-0x855fffff]
+May 25 18:52:42 obpc kernel: pci 0000:03:01.0:   bridge window [mem 0x4012000000-0x45674fffff 64bit pref]
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0: PCI bridge to [bus 12-1e]
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0:   bridge window [io  0x7000-0x7fff]
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0:   bridge window [mem 0x85600000-0x86afffff]
+May 25 18:52:42 obpc kernel: pci 0000:03:02.0:   bridge window [mem 0x4567500000-0x4abc9fffff 64bit pref]
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0: PCI bridge to [bus 1f-2b]
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0:   bridge window [io  0x8000-0x8fff]
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0:   bridge window [mem 0x86b00000-0x87ffffff]
+May 25 18:52:42 obpc kernel: pci 0000:03:03.0:   bridge window [mem 0x4abca00000-0x5011efffff 64bit pref]
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0: PCI bridge to [bus 03-2b]
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0:   bridge window [io  0x5000-0x8fff]
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0:   bridge window [mem 0x80000000-0x880fffff]
+May 25 18:52:42 obpc kernel: pci 0000:02:00.0:   bridge window [mem 0x4000000000-0x5011ffffff 64bit pref]
+May 25 18:52:42 obpc kernel: pcieport 0000:00:07.0: PCI bridge to [bus 02-2b]
+May 25 18:52:42 obpc kernel: pcieport 0000:00:07.0:   bridge window [io  0x5000-0x8fff]
+May 25 18:52:42 obpc kernel: pcieport 0000:00:07.0:   bridge window [mem 0x80000000-0x89efffff]
+May 25 18:52:42 obpc kernel: pcieport 0000:00:07.0:   bridge window [mem 0x4000000000-0x5013ffffff 64bit pref]
+May 25 18:52:42 obpc kernel: pcieport 0000:02:00.0: enabling device (0000 -> 0003)
+May 25 18:52:42 obpc kernel: pcieport 0000:03:00.0: enabling device (0000 -> 0003)
+May 25 18:52:42 obpc kernel: pcieport 0000:03:01.0: enabling device (0000 -> 0003)
+May 25 18:52:42 obpc kernel: pcieport 0000:03:01.0: pciehp: Slot #1 AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug+ Surprise+ Interlock- NoCompl+ IbPresDis- LLActRep+
+May 25 18:52:42 obpc kernel: pcieport 0000:03:02.0: enabling device (0000 -> 0003)
+May 25 18:52:42 obpc kernel: pcieport 0000:03:02.0: pciehp: Slot #2 AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug+ Surprise+ Interlock- NoCompl+ IbPresDis- LLActRep+
+May 25 18:52:42 obpc kernel: pcieport 0000:03:03.0: enabling device (0000 -> 0003)
+May 25 18:52:42 obpc kernel: pcieport 0000:03:03.0: pciehp: Slot #3 AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug+ Surprise+ Interlock- NoCompl+ IbPresDis- LLActRep+
+May 25 18:52:42 obpc kernel: nvidia 0000:04:00.0: AER: unmasked Uncorrectable Internal Error at probe
+May 25 18:52:42 obpc kernel: nvidia 0000:04:00.0: enabling device (0000 -> 0003)
+May 25 18:52:42 obpc kernel: nvidia 0000:04:00.0: vgaarb: VGA decodes changed: olddecodes=io+mem,decodes=none:owns=none
+May 25 18:52:42 obpc kernel: pci 0000:04:00.1: extending delay after power-on from D3hot to 20 msec
+May 25 18:52:42 obpc kernel: pci 0000:04
