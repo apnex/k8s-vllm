@@ -1,0 +1,53 @@
+ADDED      kube-system   16m         Normal    Pulled      pod/nvidia-driver-injector-hc45j   Container image "apnex/nvidia-driver-injector:595.71.05-aorus.14" already present on machine and can be accessed by the pod
+ADDED      kube-system   2m11s       Warning   Unhealthy   pod/nvidia-driver-injector-hc45j   Readiness probe failed:
+ADDED      kube-system   4m15s       Normal    Killing     pod/nvidia-driver-injector-hc45j   Container driver failed liveness probe, will be restarted
+ADDED      kube-system   14m         Warning   Unhealthy   pod/nvidia-driver-injector-hc45j   (combined from similar events): Readiness probe failed:
+ADDED      vllm          5m          Normal    Pulled      pod/vllm-799d689678-gcvx5          Container image "vllm/vllm-openai:v0.20.2" already present on machine and can be accessed by the pod
+ADDED      vllm          36m         Normal    Created     pod/vllm-799d689678-gcvx5          Container created
+ADDED      vllm          5m          Warning   Failed      pod/vllm-799d689678-gcvx5          Error: failed to create containerd task: failed to create shim task: OCI runtime create failed: could not apply required modification to OCI specification: error modifying OCI spec: failed to create the automatic CDI modifier: failed to generate CDI spec for mode "auto": failed to construct device spec generators: failed to initialize NVML: Driver Not Loaded
+ADDED      vllm          28s         Warning   BackOff     pod/vllm-799d689678-gcvx5          Back-off restarting failed container vllm in pod vllm-799d689678-gcvx5_vllm(3ec896f9-7eab-4c27-869c-4edfa69d82da)
+MODIFIED   vllm          0s          Normal    Pulled      pod/vllm-799d689678-gcvx5          Container image "vllm/vllm-openai:v0.20.2" already present on machine and can be accessed by the pod
+MODIFIED   kube-system   0s          Warning   Unhealthy   pod/nvidia-driver-injector-hc45j   Readiness probe failed:
+MODIFIED   kube-system   0s          Normal    Killing     pod/nvidia-driver-injector-hc45j   Container driver failed liveness probe, will be restarted
+MODIFIED   vllm          0s          Warning   BackOff     pod/vllm-799d689678-gcvx5          Back-off restarting failed container vllm in pod vllm-799d689678-gcvx5_vllm(3ec896f9-7eab-4c27-869c-4edfa69d82da)
+MODIFIED   vllm          0s          Normal    Pulled      pod/vllm-799d689678-gcvx5          Container image "vllm/vllm-openai:v0.20.2" already present on machine and can be accessed by the pod
+MODIFIED   kube-system   0s          Warning   Unhealthy   pod/nvidia-driver-injector-hc45j   Readiness probe failed:
+MODIFIED   kube-system   0s          Normal    Killing     pod/nvidia-driver-injector-hc45j   Container driver failed liveness probe, will be restarted
+MODIFIED   vllm          0s          Warning   BackOff     pod/vllm-799d689678-gcvx5          Back-off restarting failed container vllm in pod vllm-799d689678-gcvx5_vllm(3ec896f9-7eab-4c27-869c-4edfa69d82da)
+MODIFIED   vllm          0s          Normal    Pulled      pod/vllm-799d689678-gcvx5          Container image "vllm/vllm-openai:v0.20.2" already present on machine and can be accessed by the pod
+MODIFIED   kube-system   0s          Warning   Unhealthy   pod/nvidia-driver-injector-hc45j   Readiness probe failed:
+MODIFIED   kube-system   0s          Normal    Killing     pod/nvidia-driver-injector-hc45j   Container driver failed liveness probe, will be restarted
+MODIFIED   kube-system   0s          Normal    Pulled      pod/nvidia-driver-injector-hc45j   Container image "apnex/nvidia-driver-injector:595.71.05-aorus.14" already present on machine and can be accessed by the pod
+MODIFIED   vllm          0s          Warning   BackOff     pod/vllm-799d689678-gcvx5          Back-off restarting failed container vllm in pod vllm-799d689678-gcvx5_vllm(3ec896f9-7eab-4c27-869c-4edfa69d82da)
+MODIFIED   vllm          0s          Normal    Pulled      pod/vllm-799d689678-gcvx5          Container image "vllm/vllm-openai:v0.20.2" already present on machine and can be accessed by the pod
+MODIFIED   kube-system   0s          Warning   Unhealthy   pod/nvidia-driver-injector-hc45j   (combined from similar events): Readiness probe failed:
+MODIFIED   vllm          0s          Warning   BackOff     pod/vllm-799d689678-gcvx5          Back-off restarting failed container vllm in pod vllm-799d689678-gcvx5_vllm(3ec896f9-7eab-4c27-869c-4edfa69d82da)
+MODIFIED   kube-system   0s          Normal    Killing     pod/nvidia-driver-injector-hc45j   Container driver failed liveness probe, will be restarted
+MODIFIED   vllm          0s          Normal    Pulled      pod/vllm-799d689678-gcvx5          Container image "vllm/vllm-openai:v0.20.2" already present on machine and can be accessed by the pod
+MODIFIED   kube-system   0s          Warning   Unhealthy   pod/nvidia-driver-injector-hc45j   Readiness probe failed:
+MODIFIED   vllm          0s          Warning   BackOff     pod/vllm-799d689678-gcvx5          Back-off restarting failed container vllm in pod vllm-799d689678-gcvx5_vllm(3ec896f9-7eab-4c27-869c-4edfa69d82da)
+DELETED    vllm          61m         Normal    Created     pod/vllm-799d689678-gcvx5          Container created
+MODIFIED   kube-system   0s          Normal    Killing     pod/nvidia-driver-injector-hc45j   Container driver failed liveness probe, will be restarted
+MODIFIED   vllm          0s          Normal    Pulled      pod/vllm-799d689678-gcvx5          Container image "vllm/vllm-openai:v0.20.2" already present on machine and can be accessed by the pod
+MODIFIED   kube-system   0s          Warning   Unhealthy   pod/nvidia-driver-injector-hc45j   Readiness probe failed:
+MODIFIED   vllm          0s          Warning   BackOff     pod/vllm-799d689678-gcvx5          Back-off restarting failed container vllm in pod vllm-799d689678-gcvx5_vllm(3ec896f9-7eab-4c27-869c-4edfa69d82da)
+MODIFIED   kube-system   0s          Warning   Unhealthy   pod/nvidia-driver-injector-hc45j   Readiness probe failed:
+MODIFIED   vllm          0s          Normal    Pulled      pod/vllm-799d689678-gcvx5          Container image "vllm/vllm-openai:v0.20.2" already present on machine and can be accessed by the pod
+MODIFIED   kube-system   0s          Normal    Killing     pod/nvidia-driver-injector-hc45j   Container driver failed liveness probe, will be restarted
+MODIFIED   vllm          0s          Warning   BackOff     pod/vllm-799d689678-gcvx5          Back-off restarting failed container vllm in pod vllm-799d689678-gcvx5_vllm(3ec896f9-7eab-4c27-869c-4edfa69d82da)
+MODIFIED   kube-system   0s          Warning   Unhealthy   pod/nvidia-driver-injector-hc45j   Readiness probe failed:
+MODIFIED   vllm          0s          Normal    Pulled      pod/vllm-799d689678-gcvx5          Container image "vllm/vllm-openai:v0.20.2" already present on machine and can be accessed by the pod
+MODIFIED   kube-system   0s          Normal    Killing     pod/nvidia-driver-injector-hc45j   Container driver failed liveness probe, will be restarted
+MODIFIED   vllm          0s          Warning   BackOff     pod/vllm-799d689678-gcvx5          Back-off restarting failed container vllm in pod vllm-799d689678-gcvx5_vllm(3ec896f9-7eab-4c27-869c-4edfa69d82da)
+MODIFIED   kube-system   0s          Warning   Unhealthy   pod/nvidia-driver-injector-hc45j   Readiness probe failed:
+MODIFIED   vllm          0s          Normal    Pulled      pod/vllm-799d689678-gcvx5          Container image "vllm/vllm-openai:v0.20.2" already present on machine and can be accessed by the pod
+MODIFIED   kube-system   0s          Normal    Killing     pod/nvidia-driver-injector-hc45j   Container driver failed liveness probe, will be restarted
+MODIFIED   kube-system   0s          Normal    Pulled      pod/nvidia-driver-injector-hc45j   Container image "apnex/nvidia-driver-injector:595.71.05-aorus.14" already present on machine and can be accessed by the pod
+MODIFIED   vllm          0s          Warning   BackOff     pod/vllm-799d689678-gcvx5          Back-off restarting failed container vllm in pod vllm-799d689678-gcvx5_vllm(3ec896f9-7eab-4c27-869c-4edfa69d82da)
+MODIFIED   kube-system   0s          Warning   Unhealthy   pod/nvidia-driver-injector-hc45j   Readiness probe failed:
+MODIFIED   vllm          0s          Normal    Pulled      pod/vllm-799d689678-gcvx5          Container image "vllm/vllm-openai:v0.20.2" already present on machine and can be accessed by the pod
+MODIFIED   vllm          0s          Warning   BackOff     pod/vllm-799d689678-gcvx5          Back-off restarting failed container vllm in pod vllm-799d689678-gcvx5_vllm(3ec896f9-7eab-4c27-869c-4edfa69d82da)
+MODIFIED   kube-system   0s          Normal    Killing     pod/nvidia-driver-injector-hc45j   Container driver failed liveness probe, will be restarted
+MODIFIED   kube-system   0s          Warning   Unhealthy   pod/nvidia-driver-injector-hc45j   Readiness probe failed:
+MODIFIED   vllm          0s          Normal    Pulled      pod/vllm-799d689678-gcvx5          Container image "vllm/vllm-openai:v0.20.2" already present on machine and can be accessed by the pod
+MODIFIED   vllm          0s          Warning   BackOff     pod/vllm-799d689678-gcvx5          Back-off restarting failed container vllm in pod vllm-799d689678-gcvx5_vllm(3ec896f9-7eab-4c27-869c-4edfa69d82da)

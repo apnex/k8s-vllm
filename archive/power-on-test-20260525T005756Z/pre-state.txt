@@ -1,0 +1,29 @@
+=== PRE-STATE captured 2026-05-25T00:57:56Z ===
+--- thunderbolt ---
+ o GIGABYTE AORUS RTX5090 AI BOX
+   |- type:          peripheral
+   |- name:          AORUS RTX5090 AI BOX
+   |- vendor:        GIGABYTE
+   |- uuid:          c4148780-00a9-7ce8-ffff-ffffffffffff
+   |- generation:    USB4
+   |- status:        disconnected
+   |- authorized:    Sun 24 May 2026 08:59:22 AM UTC
+   |- connected:     Sun 24 May 2026 08:59:22 AM UTC
+   `- stored:        Wed 29 Apr 2026 04:41:24 AM UTC
+      |- policy:     iommu
+      `- key:        no
+
+--- pci nvidia ---
+--- nvidia module ---
+cat: /sys/module/nvidia/version: No such file or directory
+--- /dev/nvidia* ---
+ls: cannot access '/dev/nvidia*': No such file or directory
+--- injector pod ---
+NAME                           READY   STATUS    RESTARTS         AGE   IP          NODE   NOMINATED NODE   READINESS GATES
+nvidia-driver-injector-hc45j   0/1     Running   29 (4m10s ago)   17h   10.42.0.3   obpc   <none>           <none>
+--- vllm pod ---
+NAME                    READY   STATUS             RESTARTS         AGE   IP          NODE   NOMINATED NODE   READINESS GATES
+vllm-799d689678-gcvx5   0/1     CrashLoopBackOff   37 (4m55s ago)   14h   10.42.0.2   obpc   <none>           <none>
+--- node labels ---
+NAME   STATUS   ROLES           AGE     VERSION        STATE   VERSION
+obpc   Ready    control-plane   2d16h   v1.35.5+k3s1   ready   595.71.05-aorus.14

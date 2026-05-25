@@ -1,0 +1,36 @@
+=== PRE-REBOOT FINAL STATE captured 2026-05-25T02:20:06Z ===
+
+--- pods ---
+NAMESPACE        NAME                                                READY   STATUS             RESTARTS         AGE
+kube-system      nvidia-driver-injector-jr2d2                        0/1     CrashLoopBackOff   7 (92s ago)      12m
+vllm             vllm-799d689678-gcvx5                               0/1     CrashLoopBackOff   53 (3m38s ago)   15h
+
+--- TB ---
+   |- status:        authorized
+   |- authorized:    Mon 25 May 2026 02:15:04 AM UTC
+
+--- sysfs TB authorized ---
+1
+
+--- PCI nvidia ---
+04:00.0 VGA compatible controller [0300]: NVIDIA Corporation GB202 [GeForce RTX 5090] [10de:2b85] (rev a1)
+04:00.1 Audio device [0403]: NVIDIA Corporation GB202 High Definition Audio Controller [10de:22e8] (rev a1)
+
+--- BAR1 (the smoking gun) ---
+	Memory at 4810000000 (64-bit, prefetchable) [disabled] [size=256M]
+	Memory at 4820000000 (64-bit, prefetchable) [disabled] [size=32M]
+
+--- bridge window 03:00.0 ---
+	Memory behind bridge: [disabled] [32-bit]
+	Prefetchable memory behind bridge: 4810000000-4821ffffff [size=288M] [32-bit]
+
+--- driver ---
+cat: /sys/module/nvidia/version: No such file or directory
+
+--- /dev/nvidia* ---
+ls: cannot access '/dev/nvidia*': No such file or directory
+
+--- kernel-events.log line count ---
+1121 archive/power-on-test-20260525T005756Z/kernel-events.log
+
+=== Reboot triggered next; expect host back in ~2 min ===
