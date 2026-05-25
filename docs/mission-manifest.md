@@ -39,10 +39,7 @@ Grouped by status. Numbered IDs match cross-references in commit messages and ot
 
 ### Dispatchable now
 
-| # | Initiative | Status | Owner | Blocker | Detail |
-|---|---|---|---|---|---|
-| **M1** | TB / PCIe deep-dive research | ready | research subagent (Opus) | none | Why does TB auto-authorize fire at boot but not at runtime? What runtime hot-plug paths exist? Upstream patches for ReBAR-aware hot-plug? Output: `audit/tb-pcie/CONSOLIDATED.md` |
-| **M2** | NVIDIA GPU Operator audit | plan written, awaiting 4 open-question sign-offs | 4 parallel research subagents + synthesis | 4 sign-off questions in `docs/gpu-operator-audit-plan.md` | Extract proven patterns for driver DaemonSet entrypoint, label/taint mgmt, controller logic, 5-year issue history. Synthesis informs D-1 / D-2 / D-4 design. |
+(none — sub-cycle 5 closed out 2026-05-25; M1 + M2 completed; D-1/D-2/D-4 all addressed in sub-cycle 5 implementation)
 
 ### Conditional (trigger-based)
 
@@ -53,19 +50,20 @@ Grouped by status. Numbered IDs match cross-references in commit messages and ot
 
 ### Hardening gaps (filed against `apnex/nvidia-driver-injector`)
 
-| # | Gap | Severity | Status | Design discussion |
+| # | Gap | Severity | Status | Resolution |
 |---|---|---|---|---|
-| **D-1** | Stale `nvidia.driver/state=ready` node label during driver-absent window | medium | open, design TBD | gated on M2 (mirror NVIDIA's label/taint conventions) |
-| **D-2** | Injector enters liveness-probe-driven crashloop instead of documented clean-exit-wait pattern under k3s | medium | open, design TBD | gated on M2 |
+| **D-1** | Stale `nvidia.driver/state=ready` node label during driver-absent window | medium | **CLOSED 2026-05-25** | Eliminated by design: sub-cycle 5 adopted NVIDIA k8s-device-plugin v0.17.4 — `nvidia.com/gpu` resource advertisement via NVML probe replaces label-based contract. No label can lie about state anymore. |
+| **D-2** | Injector enters liveness-probe-driven crashloop instead of documented clean-exit-wait pattern under k3s | medium | **CLOSED 2026-05-25** | PC-1 shipped: livenessProbe dropped; startupProbe gated on PC-3 file matches NVIDIA's startup-only pattern (PR #1317). |
 | **D-3** | PCIe tunnel does not autonomously recover from chassis power-cycle; requires reboot with cable in place | high | **elevated to MISSION-1** — tracked at `docs/mission-egpu-hot-plug-hot-power.md` | M1 research completed (`audit/tb-pcie/CONSOLIDATED.md`); empirical test E1 (cable replug) queued before further phases |
-| **D-4** | Injector failure modes are buried in logs (BAR1=256MB error took 10+ min to surface during 2026-05-25 test) | low-medium | open, design TBD | gated on M2 |
+| **D-4** | Injector failure modes are buried in logs (BAR1=256MB error took 10+ min to surface during 2026-05-25 test) | low-medium | **CLOSED 2026-05-25** | PC-4 (exit code enum + /dev/kmsg first-failure markers) + PC-5 (must-gather.sh) + PC-3 (state file with phase enum + diagnostic fields) shipped. |
 
 ### Deferred (post-audit)
 
 | # | Initiative | Trigger | Detail |
 |---|---|---|---|
-| **M5** | Injector code changes for D-1 / D-2 / D-3 / D-4 | M1 + M2 complete + design call made | Implementation phase. Code changes against injector repo, not this repo. |
+| **M5** | Injector code changes for D-1 / D-2 / D-3 / D-4 | M1 + M2 complete + design call made | **DONE 2026-05-25** — sub-cycle 5 shipped 7 patches across 16 commits on both repos. See `docs/sub-cycle-5-plan.md` for the executed plan. Outstanding follow-ups: bar1 strtonum() compatibility, terminationGracePeriodSeconds, heartbeat PCI presence check, 3 more docs syncing retired label. |
 | **M6** | Laguna-XS.2 model bench | any time (passes all v0.20.2 hard gates) | Single-variable swap against R11; ~45 min. Most useful BATCHED with M3's v0.21.1 cutover when 2 more Tier S candidates also become testable. |
+| **Sub-cycle 6** | PC-8 init container split | After sub-cycle 5 soak settles | Init = status validation script, main = driver ops + heartbeat. Substrate (PC-3 file) is now in place. User flagged this as candidate for hybrid execution methodology (engineer-driven instead of mechanical plan). |
 
 ### Post-soak (after 2026-06-07 window closes)
 
@@ -80,6 +78,10 @@ Grouped by status. Numbered IDs match cross-references in commit messages and ot
 
 | Date | What | Where landed |
 |---|---|---|
+| **2026-05-25** | **Sub-cycle 5 implementation: 8 patches across 16 commits + cross-repo doc sync. Closed D-1, D-2, D-4 hardening gaps.** | injector `b6c9ed5..c38a1b9`, k8s-vllm `babfd22..800cb11` |
+| 2026-05-25 | MISSION-1 (eGPU runtime hot-plug + hot-power + unexpected-disconnect) declared as 3rd equal-weight project mission | this repo, `24febce` |
+| 2026-05-25 | M1 (TB/PCIe deep-dive) + M2 (gpu-operator audit) completed | this repo, `4a8f104` |
+| 2026-05-25 | Reliability test surfaced D-1/D-2/D-3/D-4 + Xid 154 active-compute hazard | this repo, `44218a1` |
 | 2026-05-22 | injector patch-intent schema + 11 catalog files | injector repo `main` |
 | 2026-05-23 | injector v3 multi-lens triangulated improvement sweep | injector repo `main` |
 | 2026-05-24 | k8s-vllm refactor (docker-compose → k3s, MetalLB VIP, v0.21.0 audit + skip) | this repo, `937533a` |
