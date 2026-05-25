@@ -57,17 +57,21 @@ Other cluster services share `192.168.1.250` via `host-pool` — pool separation
 
 ## Producer / consumer contract
 
-The deployment gates on labels published by [`apnex/nvidia-driver-injector`](https://github.com/apnex/nvidia-driver-injector):
+The deployment gates on the canonical NVIDIA device-plugin path. Three pieces wired across two repos:
 
-- `nodeSelector: nvidia.driver/state=ready`
-- `runtimeClassName: nvidia`
-- `env: NVIDIA_VISIBLE_DEVICES=all`
+- `resources.limits[nvidia.com/gpu]: 1` (paired with `requests`) — **scheduling gate**, advertised by the NVIDIA k8s-device-plugin DaemonSet in `device-plugin.yaml`
+- `runtimeClassName: nvidia` — **device injection** path through containerd's nvidia handler (configured by the injector's `scripts/apply.sh`)
+- `env: NVIDIA_VISIBLE_DEVICES=all` + `NVIDIA_DRIVER_CAPABILITIES=compute,utility` — the env protocol that `nvidia-container-cli` reads
 
-If the driver injector has not finished rolling out, the pod will sit `Pending` with `0/1 nodes are available`.\
-Verify the producer first:
+The device plugin probes NVML and waits for the [`apnex/nvidia-driver-injector`](https://github.com/apnex/nvidia-driver-injector) PC-3 readiness file (`/run/nvidia/injector/state`, `"phase":"ready"`) before advertising the resource — so a node only becomes schedulable for vLLM when the patched driver is actually loaded. Full contract spec: [`consumer-contract.md`](https://github.com/apnex/nvidia-driver-injector/blob/main/docs/consumer-contract.md).
+
+If the chain is broken anywhere, the pod sits `Pending` with `0/1 nodes available: 1 Insufficient nvidia.com/gpu`. Walk it in order:
 
 ```bash
-kubectl get nodes -L nvidia.driver/state,nvidia.driver/version
+kubectl describe node | grep -A1 'nvidia.com/gpu'                  # device plugin advertising?
+kubectl get pods -n kube-system -l name=nvidia-device-plugin-ds    # plugin pod alive?
+cat /run/nvidia/injector/state                                     # injector at phase=ready?
+kubectl get nodes -L nvidia.driver/version                         # producer version (informational)
 ```
 
 ## Change the model

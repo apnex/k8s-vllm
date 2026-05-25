@@ -39,7 +39,8 @@ kubectl apply -f k8s/
 kubectl -n vllm rollout status deployment/vllm
 ```
 
-The workload gates on labels published by the driver injector — `nodeSelector: nvidia.driver/state=ready` + `runtimeClassName: nvidia` + `env: NVIDIA_VISIBLE_DEVICES=all`.\
+The workload gates on the canonical NVIDIA device-plugin path — `resources.limits[nvidia.com/gpu]: 1` + `runtimeClassName: nvidia` + `env: NVIDIA_VISIBLE_DEVICES=all`.\
+The `nvidia.com/gpu` resource is advertised by the [NVIDIA k8s-device-plugin](https://github.com/NVIDIA/k8s-device-plugin) DaemonSet (`k8s/device-plugin.yaml`), which probes NVML once the [driver injector](https://github.com/apnex/nvidia-driver-injector) reaches PC-3 `phase=ready`.\
 Full apply / verify / port-forward walkthrough in [`k8s/README.md`](k8s/README.md).
 
 ---
@@ -158,14 +159,26 @@ Layer 0  Hardware                     - AORUS 5090 over TB, NUC 15 Pro+
 
 ### Pod stuck `Pending` with `0/1 nodes are available`
 
-The producer's node label `nvidia.driver/state=ready` is absent.\
-The driver injector either has not finished rolling out or has failed.
+Two causes — both gate on the device plugin advertising `nvidia.com/gpu`.
 
-Verify the producer:
+Check the resource advertisement first:
 ```bash
-kubectl get nodes -L nvidia.driver/state,nvidia.driver/version
-kubectl -n kube-system rollout status ds/nvidia-driver-injector
+kubectl describe node | grep -A1 'nvidia.com/gpu'   # Allocatable should show ≥1
+kubectl get nodes -L nvidia.driver/version          # producer version (informational)
 ```
+
+If `nvidia.com/gpu` is absent or `0`, walk the producer chain in order:
+
+1. Device plugin pod not running (or its initContainer still waiting for the injector):
+   ```bash
+   kubectl get pods -n kube-system -l name=nvidia-device-plugin-ds
+   kubectl logs  -n kube-system -l name=nvidia-device-plugin-ds -c wait-for-driver
+   ```
+2. Injector not at PC-3 `phase=ready` (cold-build phase, ~60-90s on a fresh node):
+   ```bash
+   cat /run/nvidia/injector/state                       # expect "phase":"ready"
+   kubectl -n kube-system rollout status ds/nvidia-driver-injector
+   ```
 
 ### `RuntimeClass "nvidia" not found`
 
