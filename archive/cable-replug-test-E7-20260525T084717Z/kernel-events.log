@@ -573,4 +573,25 @@ May 25 18:52:42 obpc kernel: nvidia 0000:04:00.0: AER: unmasked Uncorrectable In
 May 25 18:52:42 obpc kernel: nvidia 0000:04:00.0: enabling device (0000 -> 0003)
 May 25 18:52:42 obpc kernel: nvidia 0000:04:00.0: vgaarb: VGA decodes changed: olddecodes=io+mem,decodes=none:owns=none
 May 25 18:52:42 obpc kernel: pci 0000:04:00.1: extending delay after power-on from D3hot to 20 msec
-May 25 18:52:42 obpc kernel: pci 0000:04
+May 25 18:52:42 obpc kernel: pci 0000:04:00.1: D0 power state depends on 0000:04:00.0
+May 25 19:15:10 obpc kernel: thunderbolt:tb_cfg_ack_plug:851: thunderbolt 0000:00:0d.2: acking hot unplug event on 0:1
+May 25 19:15:10 obpc kernel: thunderbolt 0-0:1.1: retimer disconnected
+May 25 19:15:10 obpc kernel: thunderbolt:tb_handle_hotplug:2462: thunderbolt 0000:00:0d.2: 0:1: switch unplugged
+May 25 19:15:10 obpc kernel: thunderbolt:tb_tunnel_deactivate:2433: thunderbolt 0000:00:0d.2: 0:12 <-> 1:20 (USB3): deactivating
+May 25 19:15:10 obpc kernel: thunderbolt:tb_path_deactivate:485: thunderbolt 0000:00:0d.2: deactivating USB3 Down path from 0:12 to 1:20
+May 25 19:15:10 obpc kernel: thunderbolt:tb_path_deactivate:485: thunderbolt 0000:00:0d.2: deactivating USB3 Up path from 1:20 to 0:12
+May 25 19:15:10 obpc kernel: thunderbolt:tb_tunnel_deactivate:2433: thunderbolt 0000:00:0d.2: 0:8 <-> 1:9 (PCI): deactivating
+May 25 19:15:10 obpc kernel: thunderbolt:tb_path_deactivate:485: thunderbolt 0000:00:0d.2: deactivating PCIe Down path from 0:8 to 1:9
+May 25 19:15:10 obpc kernel: thunderbolt:tb_path_deactivate:485: thunderbolt 0000:00:0d.2: deactivating PCIe Up path from 1:9 to 0:8
+May 25 19:15:10 obpc kernel: thunderbolt 0-1: device disconnected
+May 25 19:15:10 obpc kernel: thunderbolt:tb_recalc_estimated_bandwidth:1520: thunderbolt 0000:00:0d.2: bandwidth consumption changed, re-calculating estimated bandwidth
+May 25 19:15:10 obpc kernel: thunderbolt:tb_recalc_estimated_bandwidth:1529: thunderbolt 0000:00:0d.2: bandwidth re-calculation done
+May 25 19:15:10 obpc kernel: thunderbolt:tb_tunnel_dp:2077: thunderbolt 0000:00:0d.2: looking for DP IN <-> DP OUT pairs:
+May 25 19:15:10 obpc kernel: thunderbolt:tb_tunnel_dp:2091: thunderbolt 0000:00:0d.2: 0:5: DP IN available
+May 25 19:15:10 obpc kernel: thunderbolt:tb_tunnel_dp:2097: thunderbolt 0000:00:0d.2: 0:5: no suitable DP OUT adapter available, not tunneling
+May 25 19:15:10 obpc kernel: thunderbolt:tb_tunnel_dp:2091: thunderbolt 0000:00:0d.2: 0:6: DP IN available
+May 25 19:15:10 obpc kernel: thunderbolt:tb_tunnel_dp:2097: thunderbolt 0000:00:0d.2: 0:6: no suitable DP OUT adapter available, not tunneling
+May 25 19:15:10 obpc kernel: pcieport 0000:00:07.0: pciehp: Slot(12): Link Down
+May 25 19:15:10 obpc kernel: pcieport 0000:00:07.0: pciehp: Slot(12): Card not present
+May 25 19:15:10 obpc kernel: pci_bus 0000:04: busn_res: [bus 04] is released
+May 25 19:15:10 obpc kernel: pci_bus 0000:03: busn_res: [bus 03-2b] is released

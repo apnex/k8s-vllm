@@ -1,0 +1,27 @@
+=== T-0 baseline 2026-05-25T04:02:34Z ===
+
+--- TB ---
+   |- status:        authorized
+   |- authorized:    Mon 25 May 2026 12:53:05 PM UTC
+   |- connected:     Mon 25 May 2026 12:53:05 PM UTC
+--- sysfs TB authorized (AORUS) ---
+1
+--- PCI nvidia ---
+04:00.0 VGA compatible controller [0300]: NVIDIA Corporation GB202 [GeForce RTX 5090] [10de:2b85] (rev a1)
+04:00.1 Audio device [0403]: NVIDIA Corporation GB202 High Definition Audio Controller [10de:22e8] (rev a1)
+--- BAR1 (must be 32GB to confirm baseline healthy) ---
+	Memory at 80000000 (32-bit, non-prefetchable) [size=64M]
+	Memory at 4000000000 (64-bit, prefetchable) [size=32G]
+	Memory at 4810000000 (64-bit, prefetchable) [size=32M]
+--- bridge window 03:00.0 ---
+	Memory behind bridge: 80000000-840fffff [size=65M] [32-bit]
+	Prefetchable memory behind bridge: 4000000000-48140fffff [size=33089M] [32-bit]
+--- driver ---
+595.71.05-aorus.14
+--- nvidia-smi ---
+NVIDIA GeForce RTX 5090, 595.71.05, 32, 24.67 W
+--- pods ---
+NAME                    READY   STATUS    RESTARTS       AGE
+vllm-799d689678-gcvx5   1/1     Running   62 (68m ago)   17h
+--- VIP serving ---
+  ✓ qwen3-coder-30b-a3b
