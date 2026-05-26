@@ -21,6 +21,13 @@ Each file is a self-contained scientific-method record: **hypothesis, method, pr
 
 ## Index
 
+### Sub-mission A / C informants — mission-level cable+power tests
+
+| ID | File | Status |
+|---|---|---|
+| E07 | [Cable replug WITH drain-first](E07-cable-replug-drain-first.md) | RUN 1 DONE (2026-05-25, clean) / RUN 2 WEDGE (2026-05-26) |
+| E08 | [Cable yank on IDLE GPU (H7 control)](E08-cable-yank-idle-gpu.md) | PARTIAL — full quiesce variant pending |
+
 ### Section 1 — No-reboot, no-setup (Phase 2.1 + 2.2)
 
 | ID | File | Status |

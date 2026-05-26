@@ -245,8 +245,8 @@ If at any point we identify the chassis firmware as the root cause (per H4):
 | **E4** | `udevadm trigger` with various subsystem filters (`--subsystem-match=pci --action=remove/add`) | H10 (udev re-trigger path) | 3 min | LOW |
 | **E5** | `setpci` writes to bridge memory base/limit registers + rescan | H10 (manual register manipulation) | 30 min | **HIGH** (mis-write can hang bus) |
 | **E6** | Test with a different TB chassis (e.g., Razer Core, OWC Helios) if available | H4 (chassis firmware vs Linux kernel as root cause) | hardware-dependent | LOW (informational only) |
-| **E7** | Cable replug WITH DRAIN-FIRST protocol (replaces E1) | H1 cleanly | 5 min | **DONE 2026-05-25 — H1 FALSIFIED** |
-| **E8** | Cable yank on IDLE GPU (no workload) — control experiment | H7 (does surprise removal alone trigger Xid 154, or does compute participate?) | 5 min | HIGH (Sub-mission C entry point) |
+| **E7** | Cable replug WITH DRAIN-FIRST protocol (replaces E1) | H1 cleanly | 5 min + reboot-on-wedge | **Run 1 DONE 2026-05-25 — H1 FALSIFIED. Run 2 2026-05-26 — WEDGE under post-sub-cycle-5 conditions (device plugin + persistence). See `docs/phase-2-experiments/E07-cable-replug-drain-first.md` for full forensics + patch-design candidate sites.** |
+| **E8** | Cable yank on IDLE GPU (no workload) — control experiment | H7 (does surprise removal alone trigger Xid 154, or does compute participate?) | 5 min + reboot-on-wedge | **Partial data 2026-05-26 (informant via E07 Run 2): H7 partially confirmed — Xid 154 fires when "idle" = drained-vLLM only; full-quiesce variant pending. See `docs/phase-2-experiments/E08-cable-yank-idle-gpu.md` for H7a/H7b discrimination plan.** |
 | **E9** | Controlled disconnect during compute, INSTRUMENTED for all early-warning signals (AER, TB link, bandwidth) | H9 | 1-2 hrs setup + execution | **HIGH (Sub-mission C critical path)** |
 | **E10-E27** | 18 net-new Phase 2 archaeology experiments (root-port remove, FLR, reset_method, D3cold, debugfs survey, RBAR setpci, cmdline tuning, kernel patches) | H10 (full enumeration) | varies | varies — see matrix |
 
