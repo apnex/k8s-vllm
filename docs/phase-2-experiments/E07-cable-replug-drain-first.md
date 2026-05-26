@@ -163,6 +163,17 @@ Today's run produced enough forensic data to START sketching patch design. To co
 - Memory: `feedback_surprise_removal_wedge_class_2026_05_26` (this Run 2 — new)
 - Kernel function references: `nv-pci.c`, `nv-tb-egpu-recover.c` (A3), `kernel_graphics.c`, `fecs_event_list.c`, `gpu_user_shared_data.c`
 
+## Forensic bundle
+
+Standardised must-gather bundle preserved at:
+
+```
+/var/log/mission-1-archaeology/E07-Run2-wedge/nvidia-injector-must-gather-20260526T083709Z-WITH-WEDGE.tar.gz
+(278 KB)
+```
+
+Generated via `sudo /root/nvidia-driver-injector/tools/must-gather.sh` after recovery, with the wedge-boot's `-b -1` journal added by hand (script now patched to include `-b -1` and `-b -2` automatically — see commit on apnex/nvidia-driver-injector). Bundle contents include: dmesg-full / dmesg-relevant, journalctl-kernel-prev-boot, lspci-vvv, boltctl, nvidia-smi-q, pc3-state.json, k8s pod/event state, soak metrics CSV. This is the artifact a patch designer would work from.
+
 ## Actual result — Run 2 (2026-05-26)
 
 **Status:** FAIL (broken-BAR1 reached) + WEDGE (terminal driver state)
