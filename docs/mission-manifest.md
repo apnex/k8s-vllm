@@ -14,7 +14,7 @@ Three equal-weight goals: **reliability** (no hard locks, surprise removal handl
 
 | Mission | Status | Detailed plan |
 |---|---|---|
-| **MISSION-1** — TB eGPU runtime hot-plug + hot-power | ACTIVE (declared 2026-05-25) | [`docs/mission-egpu-hot-plug-hot-power.md`](./mission-egpu-hot-plug-hot-power.md) |
+| **MISSION-1** — TB eGPU runtime hot-plug + hot-power | ACTIVE (declared 2026-05-25) | [`apnex/nvidia-driver-injector` → `docs/missions/mission-1-egpu-hot-plug-hot-power/`](https://github.com/apnex/nvidia-driver-injector/tree/main/docs/missions/mission-1-egpu-hot-plug-hot-power) (relocated 2026-05-26 from k8s-vllm — investigation lives adjacent to the patches it informs) |
 
 ---
 
@@ -54,7 +54,7 @@ Grouped by status. Numbered IDs match cross-references in commit messages and ot
 |---|---|---|---|---|
 | **D-1** | Stale `nvidia.driver/state=ready` node label during driver-absent window | medium | **CLOSED 2026-05-25** | Eliminated by design: sub-cycle 5 adopted NVIDIA k8s-device-plugin v0.17.4 — `nvidia.com/gpu` resource advertisement via NVML probe replaces label-based contract. No label can lie about state anymore. |
 | **D-2** | Injector enters liveness-probe-driven crashloop instead of documented clean-exit-wait pattern under k3s | medium | **CLOSED 2026-05-25** | PC-1 shipped: livenessProbe dropped; startupProbe gated on PC-3 file matches NVIDIA's startup-only pattern (PR #1317). |
-| **D-3** | PCIe tunnel does not autonomously recover from chassis power-cycle; requires reboot with cable in place | high | **elevated to MISSION-1** — tracked at `docs/mission-egpu-hot-plug-hot-power.md` | M1 research completed (`audit/tb-pcie/CONSOLIDATED.md`); empirical test E1 (cable replug) queued before further phases |
+| **D-3** | PCIe tunnel does not autonomously recover from chassis power-cycle; requires reboot with cable in place | high | **elevated to MISSION-1** — tracked at [`apnex/nvidia-driver-injector` → `docs/missions/mission-1-egpu-hot-plug-hot-power/`](https://github.com/apnex/nvidia-driver-injector/tree/main/docs/missions/mission-1-egpu-hot-plug-hot-power) | M1 research completed (`audit/tb-pcie/CONSOLIDATED.md`); E07 Run 2 wedge surfaced patch-design candidate sites 2026-05-26 |
 | **D-4** | Injector failure modes are buried in logs (BAR1=256MB error took 10+ min to surface during 2026-05-25 test) | low-medium | **CLOSED 2026-05-25** | PC-4 (exit code enum + /dev/kmsg first-failure markers) + PC-5 (must-gather.sh) + PC-3 (state file with phase enum + diagnostic fields) shipped. |
 
 ### Deferred (post-audit)
