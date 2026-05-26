@@ -239,15 +239,18 @@ If at any point we identify the chassis firmware as the root cause (per H4):
 
 | # | Experiment | Validates / falsifies | Cost | Priority |
 |---|---|---|---|---|
-| **E1** | Cable replug on powered chassis (NUC-side unplug, 5s wait, replug) — **WITH ACTIVE WORKLOAD** | H1, H7 | 2 min | **DEPRECATED — see E7** |
-| **E2** | `echo 0 > /sys/bus/pci/slots/<N>/power; echo 1 > /sys/bus/pci/slots/<N>/power` | H10 (pcihp slot power cycle path) | 5 min | HIGH |
-| **E3** | Cycle through every writable sysfs file under `/sys/bus/pci/devices/0000:0X:00.0/` | H10 (sysfs surface) | 30 min | MEDIUM (Phase 2 scope) |
-| **E4** | `udevadm trigger` with various subsystem filters | H10 (udev re-trigger path) | 15 min | MEDIUM |
-| **E5** | Force `setpci` rewrite of bridge BAR registers + rescan | H10 (manual register manipulation) | 30 min | LOW (high risk, lowest expected yield) |
+| **E1** | Cable replug on powered chassis (NUC-side unplug, 5s wait, replug) — **WITH ACTIVE WORKLOAD** | H1, H7 | 2 min | **DEPRECATED — caused Xid 154 2026-05-25; replaced by E7** |
+| **E2** | `/sys/bus/pci/slots/<N>/power` (pciehp slot power-cycle) | H10 (pcihp slot power cycle path) | 2 min | LOW |
+| **E3** | Exhaustive sysfs walker — every writable file under `/sys/bus/pci/devices/` + `/sys/bus/thunderbolt/` | H10 (sysfs surface) | 1-2 hr | LOW |
+| **E4** | `udevadm trigger` with various subsystem filters (`--subsystem-match=pci --action=remove/add`) | H10 (udev re-trigger path) | 3 min | LOW |
+| **E5** | `setpci` writes to bridge memory base/limit registers + rescan | H10 (manual register manipulation) | 30 min | **HIGH** (mis-write can hang bus) |
 | **E6** | Test with a different TB chassis (e.g., Razer Core, OWC Helios) if available | H4 (chassis firmware vs Linux kernel as root cause) | hardware-dependent | LOW (informational only) |
-| **E7** | Cable replug WITH DRAIN-FIRST protocol (replaces E1) | H1 cleanly | 5 min | **HIGH — do first** |
+| **E7** | Cable replug WITH DRAIN-FIRST protocol (replaces E1) | H1 cleanly | 5 min | **DONE 2026-05-25 — H1 FALSIFIED** |
 | **E8** | Cable yank on IDLE GPU (no workload) — control experiment | H7 (does surprise removal alone trigger Xid 154, or does compute participate?) | 5 min | HIGH (Sub-mission C entry point) |
 | **E9** | Controlled disconnect during compute, INSTRUMENTED for all early-warning signals (AER, TB link, bandwidth) | H9 | 1-2 hrs setup + execution | **HIGH (Sub-mission C critical path)** |
+| **E10-E27** | 18 net-new Phase 2 archaeology experiments (root-port remove, FLR, reset_method, D3cold, debugfs survey, RBAR setpci, cmdline tuning, kernel patches) | H10 (full enumeration) | varies | varies — see matrix |
+
+Full protocols + cost/risk/order for E2-E5 and E10-E27 are in `docs/phase-2-archaeology-matrix.md`. This table is the registry; the matrix is the operational doc.
 
 ---
 
