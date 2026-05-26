@@ -6,7 +6,9 @@
 
 **Status of H1 (cable replug → 32GB)**: FALSIFIED 2026-05-25 by E7. This doc is the follow-up.
 
-**Canonical experiment registry.** This doc is the single source of truth for Phase 2 experiment numbering. Mission doc's experiment table cross-references this file.
+**Canonical experiment registry.** This doc is the single source of truth for Phase 2 experiment **numbering + hypothesis + ordering**. Mission doc's experiment table cross-references this file.
+
+**Per-experiment operational truth** (exact commands, predicted PASS/FAIL signatures, recovery procedures, actual results) lives in `docs/phase-2-experiments/` — one file per experiment, scientific-method format. Strategic question + execution detail are split for readability and concurrent updateability. See `docs/phase-2-experiments/README.md` for the index.
 
 ## Numbering convention
 
